@@ -6,7 +6,7 @@
 
 ### deploy to ghpages from app/src
 
-    git subtree push --prefix app/src origin gh-pages
+`git subtree push --prefix app/src origin gh-pages`
 
 ---
 
@@ -30,23 +30,23 @@
 ---
 ---
 
-SASS SCSS AUTOPREFIXER
+#### SASS SCSS AUTOPREFIXER
 -----
 - install: 
 
-        npm install autoprefixer postcss postcss-cli -g
+`npm install autoprefixer postcss postcss-cli -g`
 
 - add script:
 
-        "prefix": "postcss ./css/ohmyfood-main.css --use autoprefixer -d ./css/prefixed/"
+`"prefix": "postcss ./css/ohmyfood-main.css --use autoprefixer -d ./css/prefixed/"`
 
 - and       
         
-        "browserslist": "last 4 versions"
+`"browserslist": "last 4 versions"`
 
 - run:
 
-        npm run prefix
+`npm run prefix`
 
 
 ----

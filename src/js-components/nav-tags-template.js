@@ -6,25 +6,31 @@ class NavTags extends HTMLElement {
     constructor() {
         super();
         const shadowRoot = this.attachShadow({mode:'open'});
+        // create nav section
         const navTagsTemplate = document.createElement('nav');
-        const navTagsTemplateUl = navTagsTemplate.appendChild(document.createElement('ul'));
+        navTagsTemplate.setAttribute('class', 'header__nav tags-list home');
 
         // link component to main stylesheet  ============> ! does not work in webpack
         const navstyle = document.createElement('link');
         navstyle.setAttribute('rel', 'stylesheet');
-        navstyle.setAttribute('href', '../css/style.css');
+        navstyle.setAttribute('href', './css/style.css');
 
+        // populate nav section with tags, list depending on context :
+        // (home nav or photographer profile tags nav)
         for (let i = 0; i < navTags.length; i++)  {
-            var navTagListItem = document.createElement('li');
-            navTagListItem.innerHTML = `
-                <a href="" class="nav-tag" id="${navTags[i]}+'-nav-tag'">${navTags[i]}</a>
-            `;
-            navTagsTemplateUl.appendChild(navTagListItem);
+            var navTagItem = document.createElement('a');
+            navTagItem.setAttribute('class', 'nav-tag');
+            navTagItem.setAttribute('id', navTags[i]+'-nav-tag');
+            navTagItem.setAttribute('href', "");
+
+            var navTagItemContent = document.createTextNode(navTags[i]);
+            navTagItem.appendChild(navTagItemContent);
+            navTagsTemplate.appendChild(navTagItem);
         };
         // Attach stylesheet to component
         shadowRoot.appendChild(navstyle);
         // Attach the created elements to the shadow dom
-        shadowRoot.appendChild(navTagsTemplateUl); 
+        shadowRoot.appendChild(navTagsTemplate); 
     }
 }
 // register custom element in the built-in CustomElementRegistry object
