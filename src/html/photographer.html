@@ -14,6 +14,8 @@
     <meta property="og:url" content="http://www.fisheye.com/{photographerName}" />
     <meta property="og:image" content="http://example.com/image.jpg" />
     <meta property="og:description" content="" />
+    <!-- Font awesome cdn -->
+    <script src="https://kit.fontawesome.com/711ecd1ff8.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="../css/style.css" />
     <!-- custom components -->
@@ -32,10 +34,49 @@
     </div>
 
     <main id="photographer-content" class="photographer-content-wrapper">
+    <!--  to be used once css issue resolved -->
+    <!-- <photographer-component-page></photographer-component-page> -->
 
-        <photographer-component-page></photographer-component-page>
-        
-        <dropdown-component></dropdown-component>
+    <!--  original photographer html chunk -->
+        <section class="photographer photographer--page" id="photographer" aria-label="photographer presentation">
+                <img class="photographer__pic page" src="../assets/img/Photographers_ID_photos/S/EllieRoseWilkens_S.jpg" alt="" id="pres-picture">
+                <div class="photographer__text-infos">
+                    <h1 class="photographer__name page" id="name">name</h1>
+                    <h2 class="photographer__location page" id="location">location</h2>
+                    <h3 class="photographer__tagline page" id="tagline">tagline</h3>
+                    <div class="photographer__tags-list tags-list page" id="tags">
+                        <a href="" class="nav-tag" id="nav-tag">ABCD</a>
+                        <a href="" class="nav-tag" id="nav-tag">EFGH</a>
+                        <a href="" class="nav-tag" id="nav-tag">IJKL</a>
+                    </div>
+                </div>
+                <div class="photographer__bottom-infos" id="bottom-infos">
+                    <h4 class="photographer__likes" id="likes">45 667</h4>
+                    <h4 class="photographer__price" id="price">78€</h4>
+                </div>
+        </section>
+
+        <!--  to be used once css issue resolved -->
+        <!-- <dropdown-component></dropdown-component> -->
+        <p class="dropdown-menu-title">trier par</p>
+        <nav class="gallery-nav" id="gallery-nav" aria-label="gallery navigation">
+            <ul id="menubar" role="menubar" aria-label="gallery navigation">
+                
+                <li>
+                    <a role="menuitem" aria-haspopup="true" aria-expanded="false" href="" tabindex="0">popularité</a>
+                    <a id="open-dropdown-btn" class="open-dropdown-btn" role="button" aria-label="see more pictures sorting options">
+                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-up"></i>
+                    </a> 
+                </li>
+                <li>
+                    <a role="menuitem" aria-haspopup="true" aria-expanded="false" href="" tabindex="0">date</a>
+                </li>
+                <li>
+                    <a role="menuitem" aria-haspopup="true" aria-expanded="false" href="" tabindex="0">titre</a>
+                </li>
+            </ul>
+        </nav>
 
         <section class="gallery-wrapper" id="gallery-section" aria-label="photographer collection section">
             <ul class="gallery" id="photos-list" aria-label="photo gallery">
@@ -49,25 +90,7 @@
 </html>
 
 
-<!--  original photographer html chunk
-    <section class="photographer photographer--page" id="photographer" aria-label="photographer presentation">
-            <img class="photographer__pic page" src="../assets/img/Photographers_ID_photos/S/EllieRoseWilkens_S.jpg" alt="" id="pres-picture">
-            <div class="photographer__text-infos">
-                <h1 class="photographer__name page" id="name">name</h1>
-                <h2 class="photographer__location page" id="location">location</h2>
-                <h3 class="photographer__tagline page" id="tagline">tagline</h3>
-                <div class="photographer__tags-list tags-list page" id="tags">
-                    <a href="" class="nav-tag" id="nav-tag">ABCD</a>
-                    <a href="" class="nav-tag" id="nav-tag">EFGH</a>
-                    <a href="" class="nav-tag" id="nav-tag">IJKL</a>
-                </div>
-            </div>
-            <div class="photographer__bottom-infos" id="bottom-infos">
-                <h4 class="photographer__likes" id="likes">45 667</h4>
-                <h4 class="photographer__price" id="price">78€</h4>
-            </div>
-    </section>
--->
+
 
 
 <!-- original photo item html chunk

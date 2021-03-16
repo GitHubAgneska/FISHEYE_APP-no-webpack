@@ -1,5 +1,6 @@
 
 @use "sass:map";
+
 /* ======================================== */
 /* MIXINS */
 /* ======================================== */
@@ -117,6 +118,22 @@ $breakpoints: (xs-mobile: 375px, mobile: 600px, tablet: 768px, laptop: 992px, de
     -ms-transition: $elements $duration $type;
     -moz-transition: $elements $duration $type;
     -o-transition: $elements $duration $type;
+}
+
+
+/* ======================================== */
+/* COMMON ELEMENTS */
+/* ======================================== */
+
+@mixin main-btn {
+    
+    // background-color: $red-main;
+    color: $white; font-weight:700;
+    font-size:1.125em; // =18px
+    // @include max-600px {font-size:1rem; }
+    // @include min-600px {font-size:1.2rem;}
+    // width: 170px;
+    height: 18px;
 }
 
 
