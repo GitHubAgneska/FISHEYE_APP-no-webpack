@@ -1,0 +1,55 @@
+/* =============================================== */
+/* PHOTOGRAPHER INFOS RULES  */
+/* =============================================== */
+
+.photographer {
+    border:2px solid red;
+    
+    &--home {
+        @include flex(column, nowrap);text-align: center;
+        @include max-600px { flex-basis:100%;}
+        @include min-600px { flex-basis:30%;}
+    }
+    &--page{ 
+        width:100%;
+        @include flex(row-reverse, nowrap);
+        justify-content: space-between; align-items: center;
+        @include min-600px{ padding: 25px; }
+        @include min-1200px { padding: 45px; background-color:$lightgrey;}
+    }
+    &__pic {
+        border-radius:50%;
+        object-fit: cover;
+        &.home {width:12.5em; height:12.5em; margin:1em auto;} 
+        &.page {@include max-1200px {width:6.25em; height:6.25em;}@include min-1200px{width:12.5em; height:12.5em;}}
+    }
+    &__name {
+        color: $orange-main; text-transform: capitalize;
+        &.home { font-size: 2.25em; margin: 0; }
+        &.page { @include max-1200px{font-size: 2.25em; } @include min-1200px {font-size:4em;} }
+    }
+    &__location {
+        color: $red-main; text-transform: capitalize;
+        &.home {font-size: 0.825em;text-transform: capitalize; margin:0.15em auto; }
+        &.page { @include max-1200px{font-size: 0.8125em; } @include min-1200px {font-size:1.5em;}}
+    }
+    &__tagline {
+        color: $grey; text-transform: capitalize;
+        &.home {font-size: 0.625em; margin:0.375em auto; }
+        &.page {@include max-1200px{font-size: 0.8125em; } @include min-1200px {font-size:1.125em;}}
+    }
+    &__price {
+        &.home{color: $grey2;font-size: 0.5625em; margin:0;}}
+     /* &__tags { } => FYI : see '_nav-tags.scss' */ 
+    
+    /* likes and price  */
+    &__bottom-infos  {
+        color:$dark;
+        background-color:$orange-main;
+        font-size: 1.25em;
+        font-weight: 500;
+        position: absolute;
+        bottom: 0;
+    }
+
+}
