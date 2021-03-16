@@ -50,3 +50,14 @@
 
 
 ----
+
+[ VSCode - customize colors :
+
+Execute from command palette:
+
+`Developer: Generate Color Theme From Current Settings`
+
+Commented colors - the ones that get default values.
+]
+
+---

@@ -348,80 +348,73 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 .photographer__bottom-infos {
+  position: fixed;
+  bottom: 0;
+  right: 0;
   color: #0000;
   background-color: #D3573C;
   font-size: 1.25em;
   font-weight: 500;
-  position: absolute;
-  bottom: 0;
+  height: 70px;
+  width: 375px;
 }
 
 /* =============================================== */
 /* GALLERY + PICTURES RULES  */
 /* =============================================== */
-.gallery {
+.gallery-wrapper {
+  background-color: pink;
+}
+.gallery-wrapper .gallery {
   background-color: lightseagreen;
-  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
 }
-@media screen and (max-width: 1200px) {
-  .gallery {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
+.gallery-wrapper .gallery .photo-item {
+  border: 5px solid violet;
+  width: 350px;
+  height: 350px;
+}
+@media screen and (max-width: 600px) {
+  .gallery-wrapper .gallery .photo-item {
+    flex-basis: 100%;
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
     -ms-transition: all 1s ease-in-out;
     -moz-transition: all 1s ease-in-out;
     -o-transition: all 1s ease-in-out;
   }
+}
+@media screen and (min-width: 600px) {
+  .gallery-wrapper .gallery .photo-item {
+    flex-basis: 30%;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+}
+.gallery-wrapper .gallery .photo-item .pic-wrapper {
+  border: 2px solid green;
+  height: 300px;
+  overflow: hidden;
+}
+.gallery-wrapper .gallery .photo-item .pic-wrapper img {
+  max-width: 100%;
+  height: auto;
+}
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  color: #901C1C;
+}
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-title {
+  flex-basis: 60%;
 }
 @media screen and (min-width: 1200px) {
-  .gallery {
-    display: flex;
-    flex-flow: column wrap;
-    transition: all 1s ease-in-out;
-    -webkit-transition: all 1s ease-in-out;
-    -ms-transition: all 1s ease-in-out;
-    -moz-transition: all 1s ease-in-out;
-    -o-transition: all 1s ease-in-out;
-  }
-}
-.gallery .photo-item {
-  border: 1px lightcoral;
-}
-@media screen and (max-width: 1200px) {
-  .gallery .photo-item {
-    width: 100%;
-    transition: all 1s ease-in-out;
-    -webkit-transition: all 1s ease-in-out;
-    -ms-transition: all 1s ease-in-out;
-    -moz-transition: all 1s ease-in-out;
-    -o-transition: all 1s ease-in-out;
-  }
-}
-@media screen and (min-width: 1200px) {
-  .gallery .photo-item {
-    width: 350px;
-    height: 350px;
-    transition: all 1s ease-in-out;
-    -webkit-transition: all 1s ease-in-out;
-    -ms-transition: all 1s ease-in-out;
-    -moz-transition: all 1s ease-in-out;
-    -o-transition: all 1s ease-in-out;
-  }
-  .gallery .photo-item img {
-    max-width: 100%;
-    height: auto;
-    background-color: blueviolet;
-  }
-  .gallery .photo-item .photo-infos {
-    display: flex;
-    flex-flow: row nowrap;
-    color: #901C1C;
-  }
-}
-@media screen and (min-width: 1200px) and (min-width: 1200px) {
-  .gallery .photo-item .photo-infos {
+  .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
     font-size: 1.25em;
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
@@ -430,24 +423,23 @@ h1, h2, h3, h4, h5, h6 {
     -o-transition: all 1s ease-in-out;
   }
 }
-@media screen and (min-width: 1200px) {
-  .gallery .photo-item .photo-infos .photo-likes, .gallery .photo-item .photo-infos .photo-price {
-    font-weight: 500;
-  }
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-likes,
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-price {
+  font-weight: 500;
 }
-@media screen and (min-width: 1200px) and (max-width: 1200px) {
-  .gallery .photo-item .photo-infos {
+@media screen and (max-width: 1200px) {
+  .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
     -ms-transition: all 1s ease-in-out;
     -moz-transition: all 1s ease-in-out;
     -o-transition: all 1s ease-in-out;
   }
-  .gallery .photo-item .photo-infos .photo-title,
-.gallery .photo-item .photo-infos .photo-likes {
+  .gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-title,
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-likes {
     font-size: 0.875em;
   }
-  .gallery .photo-item .photo-infos .photo-price {
+  .gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-price {
     font-size: 0.75em;
   }
 }

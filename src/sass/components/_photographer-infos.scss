@@ -44,12 +44,13 @@
     
     /* likes and price  */
     &__bottom-infos  {
+        position: fixed;
+        bottom: 0; right:0;
         color:$dark;
         background-color:$orange-main;
         font-size: 1.25em;
         font-weight: 500;
-        position: absolute;
-        bottom: 0;
+        height:70px; width: 375px;
     }
 
 }

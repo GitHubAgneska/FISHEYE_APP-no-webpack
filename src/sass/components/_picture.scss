@@ -2,33 +2,55 @@
 /* GALLERY + PICTURES RULES  */
 /* =============================================== */
 
+.gallery-wrapper {
+    background-color: pink;
 
-.gallery {
-    background-color: lightseagreen;
-    width: 100%;
-    @include max-1200px {@include flex(row, wrap); justify-content: space-between;}
-    @include min-1200px {@include flex(column, wrap); }
+    .gallery {
+        background-color: lightseagreen;
+        @include flex(row, wrap);
+        justify-content: space-between;
 
-    .photo-item {
-        border: 1px lightcoral;
-        @include max-1200px { width: 100%; }
-        @include min-1200px {
-            width: 350px;height:350px;
+    
 
-            img { max-width:100%; height:auto; background-color: blueviolet;}
+        .photo-item { // = li elements
+            border: 5px solid violet;
 
-            .photo-infos {
+            @include max-600px { flex-basis:100%;}
+            @include min-600px { flex-basis:30%;}
+
+            width: 350px;
+            height: 350px;
+
+            .pic-wrapper {
+                border: 2px solid green;
+                height:300px;
+                overflow: hidden;
+                img {
+                    max-width: 100%;
+                    height:auto;
+                }
+            }
+
+            .pic-infos-wrapper {
                 @include flex(row, nowrap);
+                .photo-title { flex-basis: 60%;}
                 color: $red-main;
+                
                 @include min-1200px { font-size: 1.25em; }
-                .photo-likes, .photo-price { font-weight:500; }
+                .photo-likes,
+                .photo-price {
+                    font-weight: 500;
+                }
                 @include max-1200px {
                     .photo-title,
-                    .photo-likes { font-size: 0.875em;}
-                    .photo-price { font-size: 0.75em;}
+                    .photo-likes {
+                        font-size: 0.875em;
+                    }
+                    .photo-price {
+                        font-size: 0.75em;
+                    }
                 }
             }
         }
-    
     }
 }

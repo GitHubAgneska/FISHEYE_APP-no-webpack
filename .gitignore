@@ -4,3 +4,5 @@ node_modules/
 *.log
 log.txt
 npm-debug.log*
+
+custom-colors-1.jsonc
