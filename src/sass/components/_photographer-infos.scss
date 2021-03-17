@@ -15,7 +15,8 @@
     &--page{ 
         width:100%;
         @include flex(row-reverse, nowrap);
-        justify-content: space-between; align-items: center;
+        justify-content: space-between; 
+        // align-items: center;
         @include min-600px{ padding: 25px; }
         @include min-1200px { padding: 45px; background-color:$lightgrey;}
     }

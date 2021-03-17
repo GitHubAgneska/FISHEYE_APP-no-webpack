@@ -3,8 +3,7 @@
 /* =============================================== */
 // component is used as top main navigation homepage
 // and in photographer's profile tagslist : home and own page
-// it is designed as follows:
-// here, independently as 
+// it is designed as one list wrapper, which style will vary based on host
 
 
 .tags-list { // tags container
@@ -14,7 +13,7 @@
     flex:auto; // takes whatever x space is left
 
     // up to 1200 nav takes the whole width
-    @include max-1200px{ width:100%; @include flex(row, wrap);justify-content: center; }
+    @include max-1200px{ width:100%; @include flex(row, wrap); }
     // from 1200 nav will wrap to next line 
     @include min-1200px{ @include flex(row, nowrap);justify-content: center; margin: 0 80px;}
 
@@ -27,15 +26,16 @@
         @include max-1200px {margin: 0 1%;}
         @include min-1200px {margin: 1%;}
     }
-    &.home {
-        // @include max-1200px{ margin:25px auto; } 
+    &.home { justify-content: center; // homepage: taglist =  always centered
+        flex-flow: row wrap; // homepage: photographer profile: tagslist will wrap if needed
         .nav-tag {
-            font-size: 0.75em;
+            font-size: 0.75em; // =12px
         }
     }
-    &.page{ 
+    &.page{ justify-content: unset; // photographer page: taglist = left aligned 
         .nav-tag {
-            font-size: 1.125em;
+            @include min-600px {font-size: 1.125em;} // = 18px
+            @include max-600px { font-size: 0.8125em;} // = 13px
         }
     }
 }

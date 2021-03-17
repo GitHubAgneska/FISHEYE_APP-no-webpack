@@ -10,16 +10,7 @@ h1 {
     @include min-1200px {font-size:2.25em; }
 }
 
-/* 'accessibility hint 'passer au contenu' 
-= visible only on hovering main content */
-.nav-help {
-    position: absolute;
-    top: 0;
-    color:$dark;
-    font-size: 1.125em;
-    font-weight: 700;
-    background-color: $orange-main;
-}
+
 
 
 
@@ -28,7 +19,6 @@ h1 {
 /* =============================================== */
 
 body {
-   // background-color: lightyellow;
     @include max-1200px { margin: 0 20px; }
     @include min-1200px { margin: 0 35px; }
 }
@@ -36,6 +26,26 @@ body {
 /* home photographers list presentation */
 .photographers { 
     @include flex(row, wrap); // list will always unfold as a row
+    justify-content: space-between;
     @include max-600px { margin:1.5em 0;}
     @include min-600px { margin:3.75em 0;}
+    &:hover { 
+        @include min-1200px {.nav-help { visibility: visible; }} // visible only when main content hovered
+    }
+}
+
+/* 'accessibility hint 'passer au contenu' 
+= visible only on hovering main content - desktop */
+.nav-help {
+    visibility: hidden;
+    position: absolute; // visible only when main content hovered
+    top: 10px; left: 45%;
+    padding: 0.2em 0.5em;
+    background-color: $orange-main;
+    @include border-radius(3px);
+    a span {
+        color:$dark;
+        font-size: 1em; // 16px
+        font-weight: 700;
+    }
 }

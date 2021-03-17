@@ -206,7 +206,6 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-flow: row-reverse nowrap;
   justify-content: space-between;
-  align-items: center;
 }
 @media screen and (min-width: 600px) {
   .photographer--page {
@@ -571,7 +570,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
     -ms-transition: all 1s ease-in-out;
@@ -620,11 +618,35 @@ h1, h2, h3, h4, h5, h6 {
     -o-transition: all 1s ease-in-out;
   }
 }
+.tags-list.home {
+  justify-content: center;
+  flex-flow: row wrap;
+}
 .tags-list.home .nav-tag {
   font-size: 0.75em;
 }
-.tags-list.page .nav-tag {
-  font-size: 1.125em;
+.tags-list.page {
+  justify-content: unset;
+}
+@media screen and (min-width: 600px) {
+  .tags-list.page .nav-tag {
+    font-size: 1.125em;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+}
+@media screen and (max-width: 600px) {
+  .tags-list.page .nav-tag {
+    font-size: 0.8125em;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
 }
 
 /* navigation tags inside photographer profile  HOME */
@@ -776,17 +798,6 @@ h1 {
   }
 }
 
-/* 'accessibility hint 'passer au contenu' 
-= visible only on hovering main content */
-.nav-help {
-  position: absolute;
-  top: 0;
-  color: black;
-  font-size: 1.125em;
-  font-weight: 700;
-  background-color: #D3573C;
-}
-
 /* =============================================== */
 /* ===  HOMEPAGE -  MAIN SECTIONS === */
 /* =============================================== */
@@ -815,6 +826,7 @@ h1 {
 .photographers {
   display: flex;
   flex-flow: row wrap;
+  justify-content: space-between;
 }
 @media screen and (max-width: 600px) {
   .photographers {
@@ -835,6 +847,35 @@ h1 {
     -moz-transition: all 1s ease-in-out;
     -o-transition: all 1s ease-in-out;
   }
+}
+@media screen and (min-width: 1200px) {
+  .photographers:hover {
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+  .photographers:hover .nav-help {
+    visibility: visible;
+  }
+}
+
+/* 'accessibility hint 'passer au contenu' 
+= visible only on hovering main content - desktop */
+.nav-help {
+  visibility: hidden;
+  position: absolute;
+  top: 10px;
+  left: 45%;
+  padding: 0.2em 0.5em;
+  background-color: #D3573C;
+  border-radius: 3px;
+}
+.nav-help a span {
+  color: black;
+  font-size: 1em;
+  font-weight: 700;
 }
 
 /* =============================================== */
