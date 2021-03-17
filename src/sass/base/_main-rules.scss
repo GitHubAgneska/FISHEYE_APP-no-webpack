@@ -24,9 +24,15 @@ a { text-decoration: none; color: unset; }
 input { border: transparent; }
 ul { margin: 0; padding: 0;}
 ul li { list-style: none; }
-button {  display: block; border: none; }
+button {  
+    display: block;
+    border: none;
+    background-color: transparent; // allows to style depending on class
+    font-size:inherit; // allows to style depending on class
+}
 
 a, input, button {cursor: pointer; }
 h1,h2, h3,h4, h5, h6 { font-weight: normal;}
+
 
 

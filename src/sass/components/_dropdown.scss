@@ -1,34 +1,34 @@
 // ===============================
-/* DROPDOWN GALLERY MENU NAV */
+/* DROPDOWN  MENU  */
 // ===============================
 
 /* FYI : dropdown menu item share some style with main-btn */
 
-.listbox-area { 
-    display: inline; // dropdown title and menu are side by side
-    margin: 15px unset;
-    
+.listbox-area {
+    @include max-600px { display: none;} // element is only present from 600px
+    display: flex; // dropdown title and menu are side by side
+    margin-top: 15px;
+    p { margin-right: 20px;}
+
     .dropdown-menu {
-        background-color: $red-main;
         width: 170px;
         height:170px;
         @include border-radius(5px);
-        @include flex(column, nowrap);
-            
-            button, li {
-                flex: auto;
-                @include main-btn;
-                width:90%; margin:auto; 
-                flex:auto;  // will take whatever y space is left
-                align-items: center;
-                // border: 1px solid white;
-                &:not(:nth-child(3)) { border-bottom: 0.5px solid $white; } // all but third li element have bottom border
+        background-color: $red-main;
 
-                display: inline-block;
-                text-transform: capitalize;
-                margin-top: 10%; // ------------- to review
+        ul { @include flex(column, nowrap);} 
+        button { @include flex(row, nowrap); justify-content: space-between; padding: 0;} //
+
+        button, li { // select items
+            width:90%; margin:auto; 
+            padding: 10%;
+            
+            color: $white;
+            text-align: unset; // reset to left
+            text-transform: capitalize;
                 
             }
+        button, li:nth-child(1) { border-bottom: 0.5px solid $white; } // all but third li element have bottom border
         
     }
 }
