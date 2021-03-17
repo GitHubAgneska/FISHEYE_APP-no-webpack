@@ -3,7 +3,7 @@
 /* =============================================== */
 
 .gallery-wrapper {
-    border:5px solid pink;
+    border:5px solid orange;
 
     .gallery {
         background-color: rgb(143, 229, 225);
@@ -15,28 +15,32 @@
         .photo-item { // = li elements
             border: 5px solid violet;
 
-            @include max-600px { 
+            @include max-992px { 
                 flex-basis:100%; // takes all width
                 height: 210px;
             }
-            @include min-600px { 
+            @include min-992px { 
                 flex-basis:30%; // takes 1/3 width (= 3 items per row)
                 height: 350px;
+                max-width: 350px; // limits expansion when item = 30% width - to keep proportions on big screens 
             }
 
-            max-width: 350px; // limits width when item = 30% width - to keep proportions on big screens 
+            min-width: 335px; // limits shrinking when item = 30% width
             
 
             .pic-wrapper {
-                border: 2px solid green;
+                border: 7px solid green;
                 @include border-radius(5px);
                 
-                @include max-600px { height:170px;  }
-                @include min-600px { height:300px; }
+                @include max-992px { height:170px; }
+                @include min-992px { height:300px; }
+
                 overflow: hidden;
+
                 img {
-                    max-width: 100%;
+                    width: 100%;
                     height:auto;
+                    display: block;
                 }
             }
 
@@ -45,8 +49,8 @@
                 align-items: center; // text = vertically centered
                 justify-content: space-between;
 
-                @include max-600px { height:40px; }// ======================= to review ( useless if using text default margins?
-                @include min-600px { height:50px; }// ======================= to review ( useless if using text default margins?
+                @include max-992px { height:40px; }// ======================= to review ( useless if using text default margins?
+                @include min-992px { height:50px; }// ======================= to review ( useless if using text default margins?
                 @include min-1200px { font-size: 1.25em; }
                 
                 .photo-title { flex-basis: 60%;} // title takes most width
