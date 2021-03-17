@@ -347,38 +347,68 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.5625em;
   margin: 0;
 }
-.photographer__bottom-infos {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  color: #0000;
-  background-color: #D3573C;
-  font-size: 1.25em;
-  font-weight: 500;
-  height: 70px;
-  width: 375px;
+@media screen and (max-width: 1200px) {
+  .photographer__bottom-infos {
+    display: none;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .photographer__bottom-infos {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #D3573C;
+    height: 70px;
+    width: 375px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+  .photographer__bottom-infos .photographer__likes * {
+    display: inline;
+  }
+  .photographer__bottom-infos .photographer__likes,
+.photographer__bottom-infos .photographer__price {
+    color: black;
+    font-size: 1.25em;
+    font-weight: 500;
+    margin: 5%;
+  }
 }
 
 /* =============================================== */
 /* GALLERY + PICTURES RULES  */
 /* =============================================== */
 .gallery-wrapper {
-  background-color: pink;
+  border: 5px solid pink;
 }
 .gallery-wrapper .gallery {
-  background-color: lightseagreen;
+  background-color: #8fe5e1;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
 }
 .gallery-wrapper .gallery .photo-item {
   border: 5px solid violet;
-  width: 350px;
-  height: 350px;
+  max-width: 350px;
 }
 @media screen and (max-width: 600px) {
   .gallery-wrapper .gallery .photo-item {
     flex-basis: 100%;
+    height: 210px;
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
     -ms-transition: all 1s ease-in-out;
@@ -389,6 +419,7 @@ h1, h2, h3, h4, h5, h6 {
 @media screen and (min-width: 600px) {
   .gallery-wrapper .gallery .photo-item {
     flex-basis: 30%;
+    height: 350px;
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
     -ms-transition: all 1s ease-in-out;
@@ -398,8 +429,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 .gallery-wrapper .gallery .photo-item .pic-wrapper {
   border: 2px solid green;
-  height: 300px;
+  border-radius: 5px;
   overflow: hidden;
+}
+@media screen and (max-width: 600px) {
+  .gallery-wrapper .gallery .photo-item .pic-wrapper {
+    height: 170px;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+}
+@media screen and (min-width: 600px) {
+  .gallery-wrapper .gallery .photo-item .pic-wrapper {
+    height: 300px;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
 }
 .gallery-wrapper .gallery .photo-item .pic-wrapper img {
   max-width: 100%;
@@ -408,10 +459,29 @@ h1, h2, h3, h4, h5, h6 {
 .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
   display: flex;
   flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
   color: #901C1C;
 }
-.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-title {
-  flex-basis: 60%;
+@media screen and (max-width: 600px) {
+  .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
+    height: 40px;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+}
+@media screen and (min-width: 600px) {
+  .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
+    height: 50px;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
 }
 @media screen and (min-width: 1200px) {
   .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
@@ -423,9 +493,14 @@ h1, h2, h3, h4, h5, h6 {
     -o-transition: all 1s ease-in-out;
   }
 }
-.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-likes,
-.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-price {
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-title {
+  flex-basis: 60%;
+}
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-likes, .gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-price {
   font-weight: 500;
+}
+.gallery-wrapper .gallery .photo-item .pic-infos-wrapper .photo-likes * {
+  display: inline;
 }
 @media screen and (max-width: 1200px) {
   .gallery-wrapper .gallery .photo-item .pic-infos-wrapper {
@@ -665,7 +740,7 @@ h1 {
 .nav-help {
   position: absolute;
   top: 0;
-  color: #0000;
+  color: black;
   font-size: 1.125em;
   font-weight: 700;
   background-color: #D3573C;

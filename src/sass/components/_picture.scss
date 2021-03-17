@@ -3,10 +3,10 @@
 /* =============================================== */
 
 .gallery-wrapper {
-    background-color: pink;
+    border:5px solid pink;
 
     .gallery {
-        background-color: lightseagreen;
+        background-color: rgb(143, 229, 225);
         @include flex(row, wrap);
         justify-content: space-between;
 
@@ -15,15 +15,24 @@
         .photo-item { // = li elements
             border: 5px solid violet;
 
-            @include max-600px { flex-basis:100%;}
-            @include min-600px { flex-basis:30%;}
+            @include max-600px { 
+                flex-basis:100%; // takes all width
+                height: 210px;
+            }
+            @include min-600px { 
+                flex-basis:30%; // takes 1/3 width (= 3 items per row)
+                height: 350px;
+            }
 
-            width: 350px;
-            height: 350px;
+            max-width: 350px; // limits width when item = 30% width - to keep proportions on big screens 
+            
 
             .pic-wrapper {
                 border: 2px solid green;
-                height:300px;
+                @include border-radius(5px);
+                
+                @include max-600px { height:170px;  }
+                @include min-600px { height:300px; }
                 overflow: hidden;
                 img {
                     max-width: 100%;
@@ -32,23 +41,23 @@
             }
 
             .pic-infos-wrapper {
-                @include flex(row, nowrap);
-                .photo-title { flex-basis: 60%;}
+                @include flex(row, nowrap); // photo infos = in a row
+                align-items: center; // text = vertically centered
+                justify-content: space-between;
+
+                @include max-600px { height:40px; }// ======================= to review ( useless if using text default margins?
+                @include min-600px { height:50px; }// ======================= to review ( useless if using text default margins?
+                @include min-1200px { font-size: 1.25em; }
+                
+                .photo-title { flex-basis: 60%;} // title takes most width
                 color: $red-main;
                 
-                @include min-1200px { font-size: 1.25em; }
-                .photo-likes,
-                .photo-price {
-                    font-weight: 500;
-                }
+                .photo-likes, .photo-price { font-weight: 500; }
+                .photo-likes *{ display: inline;}
                 @include max-1200px {
                     .photo-title,
-                    .photo-likes {
-                        font-size: 0.875em;
-                    }
-                    .photo-price {
-                        font-size: 0.75em;
-                    }
+                    .photo-likes { font-size: 0.875em; }
+                    .photo-price { font-size: 0.75em; }
                 }
             }
         }
