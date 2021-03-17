@@ -143,11 +143,13 @@ h1, h2, h3, h4, h5, h6 {
 /* MAIN BUTTON  */
 /* =============================================== */
 .main-btn {
+  height: 70px;
+  width: 170px;
   color: #ffff;
   font-weight: 700;
   background-color: #901C1C;
-  height: 18px;
-  width: 170px;
+  text-transform: capitalize;
+  border-radius: 3px;
 }
 @media screen and (max-width: 600px) {
   .main-btn {
@@ -169,10 +171,25 @@ h1, h2, h3, h4, h5, h6 {
     -o-transition: all 1s ease-in-out;
   }
 }
+.main-btn--contact {
+  margin-left: 50px;
+}
+@media screen and (max-width: 600px) {
+  .main-btn--contact {
+    height: 35px;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+  }
+}
 
 /* DROPDOWN  MENU  */
 /* FYI : dropdown menu item share some style with main-btn */
 .listbox-area {
+  height: 80px;
+  position: relative;
   display: flex;
   margin-top: 15px;
 }
@@ -320,7 +337,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 @media screen and (min-width: 600px) {
-  .photographer__name.page, .photographer .contact-btn {
+  .photographer__name.page, .photographer .main-btn--contact {
     display: inline;
     transition: all 1s ease-in-out;
     -webkit-transition: all 1s ease-in-out;
@@ -330,7 +347,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 @media screen and (max-width: 600px) {
-  .photographer .contact-btn {
+  .photographer .main-btn--contact {
     position: absolute;
     bottom: 15px;
     transition: all 1s ease-in-out;

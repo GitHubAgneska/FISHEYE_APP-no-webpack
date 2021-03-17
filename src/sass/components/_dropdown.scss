@@ -6,6 +6,8 @@
 
 .listbox-area {
     @include max-600px { display: none;} // element is only present from 600px
+    height: 80px;
+    position: relative; // allows menu to pass over gallery when expanded
     display: flex; // dropdown title and menu are side by side
     margin-top: 15px;
     p { margin-right: 20px;}

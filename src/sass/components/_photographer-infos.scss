@@ -28,8 +28,8 @@
         &.home {width:12.5em; height:12.5em; margin:1em auto;} 
         &.page {@include max-1200px {width:6.25em; height:6.25em;}@include min-1200px{width:12.5em; height:12.5em;}}
     }
-    &__name.page, .contact-btn { @include min-600px{display: inline;}} // from 600 photographer page : contact btn = inline by side of name
-    .contact-btn { @include max-600px{position: absolute; bottom:15px; }} // mobile photographer page: contact btn at bottom center
+    &__name.page, .main-btn--contact { @include min-600px{display: inline;}} // from 600 photographer page : contact btn = inline by side of name
+    .main-btn--contact { @include max-600px{position: absolute; bottom:15px; }} // mobile photographer page: contact btn at bottom center
 
     &__name {
         color: $orange-main; text-transform: capitalize; margin:0;
