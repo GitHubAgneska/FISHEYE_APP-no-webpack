@@ -61,3 +61,12 @@ Commented colors - the ones that get default values.
 ]
 
 ---
+
+
+### ACCESSIBILITY
+----
+Dropdown menu made on w3 model:
+https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+
+
+

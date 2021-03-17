@@ -139,7 +139,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* DROPDOWN GALLERY MENU NAV */
 /* FYI : dropdown menu item share some style with main-btn */
-.gallery-nav ul {
+.listbox-area {
+  display: inline;
+  margin: 15px unset;
+}
+.listbox-area .dropdown-menu {
   background-color: #901C1C;
   width: 170px;
   height: 170px;
@@ -147,7 +151,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-flow: column nowrap;
 }
-.gallery-nav ul li {
+.listbox-area .dropdown-menu button, .listbox-area .dropdown-menu li {
   flex: auto;
   color: #ffff;
   font-weight: 700;
@@ -157,14 +161,12 @@ h1, h2, h3, h4, h5, h6 {
   margin: auto;
   flex: auto;
   align-items: center;
-}
-.gallery-nav ul li:not(:nth-child(3)) {
-  border-bottom: 0.5px solid #ffff;
-}
-.gallery-nav ul li a {
   display: inline-block;
   text-transform: capitalize;
   margin-top: 10%;
+}
+.listbox-area .dropdown-menu button:not(:nth-child(3)), .listbox-area .dropdown-menu li:not(:nth-child(3)) {
+  border-bottom: 0.5px solid #ffff;
 }
 
 /* =============================================== */
