@@ -1,9 +1,14 @@
 /* =============================================== */
 /* NAV TAGS RULES  */
 /* =============================================== */
+// component is used as top main navigation homepage
+// and in photographer's profile tagslist : home and own page
+// it is designed as follows:
+// here, independently as 
 
-.tags-list { 
-    // border:1px solid lightgreen;
+
+.tags-list { // tags container
+    border:1px solid lightgreen;
     display: flex;
     align-items: center;
     flex:auto; // takes whatever x space is left
@@ -11,8 +16,9 @@
     // up to 1200 nav takes the whole width
     @include max-1200px{ width:100%; @include flex(row, wrap);justify-content: center; }
     // from 1200 nav will wrap to next line 
-    @include min-1200px{ @include flex(row, nowrap);justify-content: center; margin: 0 80px;} 
-    .nav-tag { 
+    @include min-1200px{ @include flex(row, nowrap);justify-content: center; margin: 0 80px;}
+
+    .nav-tag { // tags elements
         padding: 0.1em 0.5em;
         color: $red-main;
         font-weight: 500;text-transform: capitalize;

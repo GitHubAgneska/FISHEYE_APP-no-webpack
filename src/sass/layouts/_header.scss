@@ -16,7 +16,8 @@
 
         &__logo-wrapper {
             @include max-1200px{ width:150px; }
-            @include min-1200px{ width:200px;margin-left:80px; }
+            @include min-1200px{ width:200px; }
+            .home {margin-left:80px;} // ----------- to review ( different home & page )
             img { max-width: 100%;}
         }
         &__nav {

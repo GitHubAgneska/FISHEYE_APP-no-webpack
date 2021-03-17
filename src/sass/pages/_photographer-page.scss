@@ -1,7 +1,11 @@
 /* =============================================== */
 /* PHOTOGRAPHER PAGE - FONTS RULES  */
 /* =============================================== */
-
+body {
+    // background-color: lightyellow;
+    @include max-1200px { margin: 0 20px; }
+    @include min-1200px { margin: 0 80px; }
+}
 /* =============================================== */
 /* ===  PHOTOGRAPHER PAGE -  MAIN SECTIONS === */
 /* =============================================== */

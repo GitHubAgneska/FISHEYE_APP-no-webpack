@@ -1,6 +1,8 @@
 /* =============================================== */
 /* PHOTOGRAPHER INFOS RULES  */
 /* =============================================== */
+// FYI : --home = homepage / --page = photographer page
+// phographers profiles have a few differences when displayed on homepage or own page
 
 .photographer {
     border:2px solid red;
@@ -8,7 +10,7 @@
     &--home {
         @include flex(column, nowrap);text-align: center;
         @include max-600px { flex-basis:100%;}
-        @include min-600px { flex-basis:30%;}
+        @include min-600px { flex-basis:30%; height: 400px;}
     }
     &--page{ 
         width:100%;
@@ -17,19 +19,24 @@
         @include min-600px{ padding: 25px; }
         @include min-1200px { padding: 45px; background-color:$lightgrey;}
     }
+    &__text-infos.page { @include min-1200px{height:200px;} } // photographer profile H when inline on own page
+    
     &__pic {
         border-radius:50%;
         object-fit: cover;
         &.home {width:12.5em; height:12.5em; margin:1em auto;} 
         &.page {@include max-1200px {width:6.25em; height:6.25em;}@include min-1200px{width:12.5em; height:12.5em;}}
     }
+    &__name.page, .contact-btn { @include min-600px{display: inline;}} // from 600 photographer page : contact btn = inline by side of name
+    .contact-btn { @include max-600px{position: absolute; bottom:15px; }} // mobile photographer page: contact btn at bottom center
+
     &__name {
-        color: $orange-main; text-transform: capitalize;
+        color: $orange-main; text-transform: capitalize; margin:0;
         &.home { font-size: 2.25em; margin: 0; }
         &.page { @include max-1200px{font-size: 2.25em; } @include min-1200px {font-size:4em;} }
     }
     &__location {
-        color: $red-main; text-transform: capitalize;
+        color: $red-main; text-transform: capitalize;margin:0;
         &.home {font-size: 0.825em;text-transform: capitalize; margin:0.15em auto; }
         &.page { @include max-1200px{font-size: 0.8125em; } @include min-1200px {font-size:1.5em;}}
     }
