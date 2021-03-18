@@ -1,3 +1,41 @@
 /* ================================== */
 /* MODAL CONTACT */
 /* ================================== */
+
+.contact-modal__main-wrapper { // white bg
+    width:100vw; height:100vh;
+
+    &__inner-wrapper {
+        width: 670px;
+        height:900px;
+        margin: auto;
+
+        .cancelModalBtn {}
+    
+        .fields-wrapper {
+            margin: 30px 35px;
+            background-color: $main-orange;
+            color: $dark;
+    
+            h1 { font-size: 64px;}
+    
+            .field {
+                width: 100%;
+                margin: 5% 0;
+                label { height: 35px; font-size: 36px; }
+                input:not([type="textarea"]){ height: 70px; } // all fields but txtarea
+                input[type="textarea"]{ height: 170px; }
+                
+                .requirements {
+                    // visibility: hidden;
+                    padding: 1% 0%;
+                    font-size: 0.6rem;
+                    color: $red-main;
+                    font-style: italic;
+                    transition: 0.28s;
+                }
+            }
+        }
+
+    }
+}
