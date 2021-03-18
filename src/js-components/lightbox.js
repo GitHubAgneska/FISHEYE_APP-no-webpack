@@ -1,9 +1,9 @@
 
-/* code chunk from:   https://www.w3.org/WAI/tutorials/carousels/full-code/ */
+// code chunk adapted from:   https://www.w3.org/WAI/tutorials/carousels/full-code/
+// Focusin/out event polyfill (for Firefox) by nuxodin
+// Source: https://gist.github.com/nuxodin/9250e56a3ce6c0446efa
+// Carousel Prototype Eric Eggert for W3C
 
-/* Focusin/out event polyfill (for Firefox) by nuxodin
- * Source: https://gist.github.com/nuxodin/9250e56a3ce6c0446efa
- */
 
 !function () {
     var w = window,
@@ -48,11 +48,11 @@ const slidesImages = [
 /* ------------- */
 
 
-/* Carousel Prototype Eric Eggert for W3C */
+
 
 var myCarousel = (function () {
 
-    "use strict";
+    "use strict"; // code should be executed in "strict mode"- you can not, for example, use undeclared variables
 
     // Initial variables
     var carousel, index, slidenav, slides, settings, timer, setFocus, animationSuspended, announceItem, _this;
@@ -63,7 +63,7 @@ var myCarousel = (function () {
             fn(elements[i], i);
     }
 
-    // Helper function: Remove Class ---------------> ( used to update class 'current/active'  of viewed picture ) ?
+    // Helper function: Remove Class ---------------> ( used to update class 'current/active'  of viewed picture ) 
     function removeClass(el, className) {
         if (el.classList) { el.classList.remove(className);
         } else { 
@@ -71,7 +71,7 @@ var myCarousel = (function () {
         }
     }
 
-    // Helper function: Test if element has a specific class -----> ( used to update class 'current/active'  of viewed picture ) ?
+    // Helper function: Test if element has a specific class -----> ( used to update class 'current/active'  of viewed picture )
     function hasClass(el, className) {
         if (el.classList) {
             return el.classList.contains(className);
@@ -95,81 +95,79 @@ var myCarousel = (function () {
 
         // Select the element and the individual slides
         carousel = document.getElementById(settings.id);
-        // slides = carousel.querySelectorAll('.slide'); // -------NOT USED ATM as html template = generated from ext data ( so '.slide' element = not pre-existing )=> = defined further down after li.slide elements = created 
         carousel.className = 'active carousel';
 
-        // TESTS -------> after fetching gallery, generate all needed attributes & properties for each image,
-        // to then inject it into DOM
+        // HERE : generate first ul, injecting data from json as bg images into li elements
+        // --------------------------------------------------------------------------------
+        var firstUl = document.createElement('ul');
+
+        // for each image of gallery, generate a li element with bg img + class .slide
         slidesImages.forEach(pic => {
+            var liItem = document.createElement('li');
+            liItem.className = 'slide';
+            var url = pic.url;
+            liItem.setAttribute('style', 'background-image:url(' + url + ')');
+            firstUl.appendChild(liItem); // attach li element to ul
+        });
 
-        })
+        carousel.appendChild(firstUl);
+        slides = carousel.querySelectorAll('.slide');
 
 
-        // CONTROLS ----------
-        // Create unordered list for controls, and attach click events fo previous and next slide
+        // CONTROLS -------------------------------------------------------------------
+        // Create unordered list for controls previous and next btns
         var ctrls = document.createElement('ul');
         ctrls.className = 'controls';
-        ctrls.innerHTML = '<li>' + '<button type="button" class="btn-prev"><img src="chevron-left.png" alt="Previous Item"></button>' + '</li>' + '<li>' + '<button type="button" class="btn-next"><img src="chevron-right.png" alt="Next Item"></button>' + '</li>';
-        ctrls.querySelector('.btn-prev').addEventListener('click', function () {
-            prevSlide(true);
-        });
-        ctrls.querySelector('.btn-next').addEventListener('click', function () {
-            nextSlide(true);
-        });
+        ctrls.innerHTML = 
+            `<li>`
+            + `<button type="button" class="btn-prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>`
+            + `</li>` 
+            + `<li>` 
+            + `<button type="button" class="btn-next"><i class="fa fa-chevron-right" aria-hidden="true"></button>` 
+            + `</li>`;
+        
+        // attach click events to btns
+        ctrls.querySelector('.btn-prev').addEventListener('click', function () { prevSlide(true); });
+        ctrls.querySelector('.btn-next').addEventListener('click', function () { nextSlide(true); });
         carousel.appendChild(ctrls);
-        // -------------------------
+        // ---------------------------------------------------------------------------------
 
 
-        // If the carousel is animated or a slide navigation is requested in the settings, 
-        // another unordered list that contains those elements is added. 
-        // (Note that you cannot supress the navigation when it is animated.)
+        // GENERATE UL ELEMENTS for accessibility  ---------------------------------------------------------------------------
+        
+        // third ul for accessibility additional infos/commands : 
+        // start/pause carousel / pictures indexes to navigate manually
+        // and check current active pic 
 
-        // If the carousel= animated or a slide navigation = requested in the settings,
-        if (settings.slidenav || settings.animate) { 
-            
+        // If the carousel= animated or a slide navigation = requested in the settings
+
+        if (settings.slidenav || settings.animate) {  
             // another unordered list that contains those elements is added.
             slidenav = document.createElement('ul'); // settings.slidenav = true : 'list of slides is shown.'
             slidenav.className = 'slidenav';
 
             if (settings.animate) {  // 'If true, the slides can be animated.'
 
-                forEachElement(slidesImages, function (el, i) {  // for each image of gallery
+                forEachElement(slides, function (el, i) {  // for each li element created with bg image
                     var li = document.createElement('li');
-                    li.setAttribute('class', 'slide'); // add 'Slide' class to each generated li element
-
-                    li.innerHTML = `
-                        <div class="li-img-wrapper">
-                            <img src="${el.url}" class="slide-img" alt="${el.name}">
-                        </div>
-                    `;
-
                     if (settings.startAnimated) {
-                        var stopDiv = document.createElement('div');
-                        stopDiv.innerHTML=
-                        `<button data-action="stop"><span class="visuallyhidden">Stop Animation </span>￭</button>`;
-                        li.appendChild(stopDiv);
-
+                        li.innerHTML = '<button data-action="stop"><span class="visuallyhidden">Stop Animation </span>￭</button>';
                     } else {
-                        var startDiv = 
-                        startDiv.innerHTML = 
-                        `<button data-action="start"><span class="visuallyhidden">Start Animation </span>▶</button>`;
-                        li.appendChild(startDiv);
-                    } 
+                        li.innerHTML = '<button data-action="start"><span class="visuallyhidden">Start Animation </span>▶</button>';
+                    }
                     slidenav.appendChild(li);
                     }
                 )}
 
             if (settings.slidenav) { // settings.slidenav = true : list of slides is shown.
 
-                forEachElement(slidesImages, function (el, i) {  // for each image of gallery
+                forEachElement(slides, function (el, i) {  // for each li element created with bg image
                     var li = document.createElement('li');
-                    li.setAttribute('class', 'slide'); // add 'Slide' class to each generated li element
-
                     var klass = (i === 0) ? 'class="current" ' : '';
                     var kurrent = (i === 0) ? ' <span class="visuallyhidden">(Current Item)</span>' : '';
 
-                    li.innerHTML = // ----------------------- list should only display picture name/title --- ?
-                        `<button ` + klass + `data-slide="` + i + `"><span class="visuallyhidden">${el.name}</span>` + ( i + 1 ) + kurrent + `</button>`;
+                    li.innerHTML = // ----------------------- list should only display picture name/title
+                        `<button ` + klass + `data-slide="` + i + `"><span class="visuallyhidden">PLACEHOLDER</span>` + ( i + 1 ) + kurrent + `</button>`;
 
                     slidenav.appendChild(li);
                 });
@@ -202,9 +200,7 @@ var myCarousel = (function () {
         carousel.appendChild(liveregion);
 
         
-        slides = carousel.querySelectorAll('.slide'); // now defined at this stage
-
-
+        slides = carousel.querySelectorAll('.slide'); // necessary to redefine --- ?
         // After the slide transitioned, remove the in-transition class, 
         // if focus should be set, set the tabindex attribute to -1 and focus the slide.
         slides[0].parentNode.addEventListener('transitionend', function (event) {
@@ -274,15 +270,12 @@ var myCarousel = (function () {
         var new_next = new_current + 1;
         var new_prev = new_current - 1;
 
-        // If the next slide number is equal to the length,
-        // the next slide should be the first one of the slides.
-        // If the previous slide number is less than 0.
-        // the previous slide is the last of the slides.
-        if (new_next === length) {
+        // If next slide number = length,  next slide = first one of the slides
+        // If  previous slide number < 0,  previous slide = last of the slides
+        if (new_next === length) { 
             new_next = 0;
-        } else if (new_prev < 0) {
-            new_prev = length - 1;
-        }
+            } else if (new_prev < 0) { new_prev = length - 1; }
+
 
         // RESET SLIDES CLASS ----------------
         for (var i = slides.length - 1; i >= 0; i--) {
@@ -306,23 +299,25 @@ var myCarousel = (function () {
             ) + ' of ' + slides.length;
         }
 
+
         // BTNS UPDATE : Update the buttons in the slider navigation to match the currently displayed item ------------
-        if (settings.slidenav) {
+        if (settings.slidenav) {  // --------- (slidenav true = display list of slides)
             var buttons = carousel.querySelectorAll('.slidenav button[data-slide]');
             for (var j = buttons.length - 1; j >= 0; j--) {
                 buttons[j].className = '';
                 buttons[j].innerHTML = `<span class="visuallyhidden">PLACEHOLDER</span> ` + ( j + 1 );
             }
             buttons[new_current].className = "current";
-            buttons[new_current].innerHTML = `<span class="visuallyhidden">PLACEHOLDER</span> ` + (
-                new_current + 1
-            ) + ` <span class="visuallyhidden">(Current Item)</span>`;
+            buttons[new_current].innerHTML = `<span class="visuallyhidden">PLACEHOLDER</span> ` 
+            + ( new_current + 1 ) 
+            + ` <span class="visuallyhidden">(Current Item)</span>`;
         }
 
         // global index = new current value
         index = new_current;
 
-    }
+    } // ( end of setSlides function )
+
 
     // GO TO NEXT SLIDE -----------------------------------------------------------------------------
     function nextSlide(announceItem) {
@@ -358,7 +353,7 @@ var myCarousel = (function () {
     function stopAnimation() {
         clearTimeout(timer);
         settings.animate = false;
-        animationSuspended = false;
+        animationSuspended = false; // -------------------------- true?
         _this = carousel.querySelector('[data-action]');
         _this.innerHTML = `<span class="visuallyhidden">Start Animation </span>▶`;
         _this.setAttribute('data-action', 'start');
@@ -400,3 +395,42 @@ window.onload = () => {
     var carousel = new myCarousel();
     carousel.init({id: 'carousel', slidenav: true, animate: true, startAnimated: true});
 }
+
+
+// FINAL HTML RESULT SHOULD LOOK LIKE SO:
+
+/* <div id="c" class="active carousel with-slidenav">
+
+    <ul>
+        <li class="current slide"  style="background-image: url('../../img/ex-teddy2-aedbb01f.jpg');"></li>
+        <li class="next slide" tabindex="-1" aria-hidden="true"><img></li>
+        <li class="prev slide" tabindex="-1" aria-hidden="true"><img></li>
+    </ul>
+
+    <ul class="controls">
+        <li><button type="button" class="btn-prev"><icon left></button> </li>
+        <li><button type="button" class="btn-next"><icon right></button></li>
+    </ul>
+
+    <ul class="slidenav">
+        <li>
+            <button data-action="start">
+                <span class="visuallyhidden">Start Animation </span>▶</button>
+        </li>
+        <li>
+            <button class="current" data-slide="0">
+                <span class="visuallyhidden">PIC NAME</span> 1 <span class="visuallyhidden">(Current Item)</span>
+            </button>
+        </li>
+        <li>
+            <button data-slide="1" class="">
+                <span class="visuallyhidden">PIC NAME</span> 2</button></li>
+        <li>
+            <button data-slide="2" class=""><span class="visuallyhidden">PIC NAME</span> 3</button>
+        </li>
+    </ul>
+
+    <div aria-live="polite" aria-atomic="true" class="liveregion visuallyhidden"></div>
+    
+</div> */
+

@@ -1045,19 +1045,74 @@ h1, h2, h3, h4, h5, h6 {
   margin: 25px 0;
 }
 
-#carousel {
-  background-color: violet;
-  width: 100%;
+body {
+  margin: 0 !important;
+}
+
+.lightbox__main-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: lightblue;
+}
+.lightbox__main-wrapper .carousel {
+  border: 5px violet;
+  width: 1050px;
+  height: 900px;
+  margin: auto;
+  padding-top: 10%;
+  position: relative;
+  overflow: hidden;
+}
+.lightbox__main-wrapper .carousel .slide {
   height: 100%;
+  background-size: cover;
+  overflow: hidden;
 }
-
-.slidenav {
+.lightbox__main-wrapper .carousel .active .slide.current {
+  visibility: visible;
+  left: 0;
+}
+.lightbox__main-wrapper .carousel .active .slide.next {
+  left: 100%;
+}
+.lightbox__main-wrapper .carousel .active .slide.prev {
+  left: -100%;
+}
+.lightbox__main-wrapper .carousel .active .slide {
+  position: absolute;
+  top: 0;
+  display: block !important;
+  transition: left 0.6s ease-out;
+  z-index: 200;
+  visibility: hidden;
+}
+.lightbox__main-wrapper .controls {
+  width: 100%;
+  position: absolute;
+  z-index: 5;
+  top: 45%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+.lightbox__main-wrapper .controls button {
+  color: #901C1C;
+  background-color: lightblue;
+  font-size: 2em;
+}
+.lightbox__main-wrapper .controls .btn-prev {
+  left: -5px;
+}
+.lightbox__main-wrapper .controls .btn-next {
+  right: 5px;
+}
+.lightbox__main-wrapper .slidenav {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
   border: 2px solid yellow;
-}
-
-.slide-img {
-  width: 500px;
-  height: auto;
+  display: flex;
+  flex-flow: row nowrap;
 }
 
 /* =============================================== */
