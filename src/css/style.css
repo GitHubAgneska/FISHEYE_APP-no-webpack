@@ -49,6 +49,9 @@
 /* COMMON ELEMENTS */
 /* ======================================== */
 /* ======================================== */
+/* ACCESSIBILITY */
+/* ======================================== */
+/* ======================================== */
 /* COLORS ( exceptions, otherwise = in _variables.scss )*/
 /* ======================================== */
 /* ================================== */
@@ -835,6 +838,62 @@ h1, h2, h3, h4, h5, h6 {
 }
 .homepage-content .homepage-title h1 {
   margin: 0;
+}
+
+/* ================================== */
+/* MODAL CONTACT */
+/* ================================== */
+.contact-modal__main-wrapper {
+  width: 100vw;
+  height: 100vh;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper {
+  position: relative;
+  width: 670px;
+  height: 900px;
+  margin: auto;
+  background-color: #D3573C;
+  border-radius: 3px;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .cancelModalBtn {
+  position: absolute;
+  right: 0;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper {
+  margin: 30px 35px;
+  color: black;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper h1 {
+  font-size: 64px;
+  margin: 0;
+  padding: 2% 0;
+  color: black;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper .field label {
+  width: 100%;
+  height: 35px;
+  font-size: 36px;
+  margin-bottom: 5px;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper .field input {
+  width: 100%;
+  border-radius: 3px;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper .field input:not([type=textarea]) {
+  height: 70px;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper .field input[type=textarea] {
+  height: 170px;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper .field .requirements {
+  color: #901C1C;
+  font-style: italic;
+  font-size: 1em;
+  transition: 0.28s;
+  margin-top: 5px;
+}
+.contact-modal__main-wrapper .contact-modal__inner-wrapper .fields-wrapper .main-btn {
+  margin: 25px 0;
 }
 
 /* =============================================== */
