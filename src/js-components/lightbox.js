@@ -39,49 +39,39 @@
 }();
 
 
-const slides = [ 
-    "../assets/img/Photographers_ID_photos/S/EllieRoseWilkens_S.jpg",
-    "../assets/img/Photographers_ID_photos/S/MarcelNikolic_S.jpg",
-    "../assets/img/Photographers_ID_photos/S/MimiKeel_S.jpg"
+/* ---- MOCK DATA ---  */
+const slidesImages = [ 
+    {"name": 1, "url": "../assets/img/Photographers_ID_photos/S/EllieRoseWilkens_S.jpg" },
+    {"name": 2, "url":  "../assets/img/Photographers_ID_photos/S/MarcelNikolic_S.jpg"},
+    {"name": 3, "url": "../assets/img/Photographers_ID_photos/S/MimiKeel_S.jpg"}
 ]
+/* ------------- */
 
-/*
-    Carousel Prototype
-    Eric Eggert for W3C
-  */
+
+/* Carousel Prototype Eric Eggert for W3C */
 
 var myCarousel = (function () {
 
     "use strict";
 
     // Initial variables
-    var carousel,
-        slides,
-        index,
-        slidenav,
-        settings,
-        timer,
-        setFocus,
-        animationSuspended;
-
+    var carousel, index, slidenav, slides, settings, timer, setFocus, animationSuspended;
 
     // Helper function: Iterates over an array of elements
     function forEachElement(elements, fn) {
         for (var i = 0; i < elements.length; i++) 
             fn(elements[i], i);
-        
     }
 
-    // Helper function: Remove Class
+    // Helper function: Remove Class ---------------> ( used to update class 'current/active'  of viewed picture ) ?
     function removeClass(el, className) {
-        if (el.classList) {
-            el.classList.remove(className);
-        } else {
+        if (el.classList) { el.classList.remove(className);
+        } else { 
             el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
     }
 
-    // Helper function: Test if element has a specific class
+    // Helper function: Test if element has a specific class -----> ( used to update class 'current/active'  of viewed picture ) ?
     function hasClass(el, className) {
         if (el.classList) {
             return el.classList.contains(className);
@@ -90,71 +80,99 @@ var myCarousel = (function () {
         }
     }
 
-    // Initialization for the carousel
+    // Initialization for the carousel ----------------------------------------
     // Argument: set = an object of settings
     // Possible settings:
-    // id <string> ID of the carousel wrapper element (required).
-    // slidenav <bool> If true, a list of slides is shown.
-    // animate <bool> If true, the slides can be animated.
-    // startAnimated <bool> If true, the animation begins
-    //                        immediately.
-    //                      If false, the animation needs
-    //                        to be initiated by clicking
-    //                        the play button.
-    
+    // -----------------
+    // - id <string> ID of the carousel wrapper element (required).
+    // - slidenav <bool> If true, a list of slides is shown.
+    // - animate <bool> If true, the slides can be animated.
+    // - startAnimated <bool> If true, the animation begins immediately.
+    //                        If false, the animation needs to be initiated by clicking the play button.
+
     function init(set) { // Make settings available to all functions
         settings = set;
 
         // Select the element and the individual slides
         carousel = document.getElementById(settings.id);
-        slides = carousel.querySelectorAll('.slide');
-
+        slides = carousel.querySelectorAll('.slide'); // -------NOT USED ATM as html template = generated from ext data ( so '.slide' element = not pre-existing )
         carousel.className = 'active carousel';
 
+        // TESTS -------> after fetching gallery, generate all needed attributes & properties for each image,
+        // to then inject it into DOM
+        slidesImages.forEach(pic => {
 
+        })
+
+
+        // CONTROLS ----------
         // Create unordered list for controls, and attach click events fo previous and next slide
         var ctrls = document.createElement('ul');
-
         ctrls.className = 'controls';
         ctrls.innerHTML = '<li>' + '<button type="button" class="btn-prev"><img src="chevron-left.png" alt="Previous Item"></button>' + '</li>' + '<li>' + '<button type="button" class="btn-next"><img src="chevron-right.png" alt="Next Item"></button>' + '</li>';
-
         ctrls.querySelector('.btn-prev').addEventListener('click', function () {
             prevSlide(true);
         });
         ctrls.querySelector('.btn-next').addEventListener('click', function () {
             nextSlide(true);
         });
-
         carousel.appendChild(ctrls);
+        // -------------------------
 
-        // If the carousel is animated or a slide navigation is requested in the settings, anoter unordered list that contains those elements is added. (Note that you cannot supress the navigation when it is animated.)
+
+        // If the carousel is animated or a slide navigation is requested in the settings, 
+        // another unordered list that contains those elements is added. 
+        // (Note that you cannot supress the navigation when it is animated.)
         if (settings.slidenav || settings.animate) {
-            slidenav = document.createElement('ul');
 
+            slidenav = document.createElement('ul'); // settings.slidenav = true : 'list of slides is shown.'
             slidenav.className = 'slidenav';
 
-            if (settings.animate) {
+            if (settings.animate) {  // 'If true, the slides can be animated.'
                 var li = document.createElement('li');
 
+                // TESTS ------ adding image to li element
+                var img = document.createElement('img'); 
+                img.setAttribute('src', "" ); // inject image url property
+                img.setAttribute('class', 'slide-img');
+                var liImage = li.appendChild(img);
+                // -----
+
                 if (settings.startAnimated) {
-                    li.innerHTML = '<button data-action="stop"><span class="visuallyhidden">Stop Animation </span>￭</button>';
+                    liImage.innerHTML = '<button data-action="stop"><span class="visuallyhidden">Stop Animation </span>￭</button>';
+                    /* li.innerHTML = img + '<button data-action="stop"><span class="visuallyhidden">Stop Animation </span>￭</button>'; */
                 } else {
-                    li.innerHTML = '<button data-action="start"><span class="visuallyhidden">Start Animation </span>▶</button>';
+                    liImage.innerHTML = '<button data-action="start"><span class="visuallyhidden">Start Animation </span>▶</button>';
+                    /* li.innerHTML = img + '<button data-action="start"><span class="visuallyhidden">Start Animation </span>▶</button>'; */
                 } slidenav.appendChild(li);
             }
 
-            if (settings.slidenav) {
-                forEachElement(slides, function (el, i) {
+            if (settings.slidenav) { // settings.slidenav = true : list of slides is shown.
+
+                forEachElement(slidesImages, function (el, i) {  // for each image of gallery
+
+               /*  forEachElement(slides, function (el, i) { */
+                    
                     var li = document.createElement('li');
+
+                    // TESTS ------ adding image to li element
+                    var img = document.createElement('img'); 
+                    img.setAttribute('src', el.url ); // -------inject image url property
+                    img.setAttribute('class', 'slide-img');
+                    var liImage = li.appendChild(img);
+                    // -----
+
                     var klass = (i === 0) ? 'class="current" ' : '';
                     var kurrent = (i === 0) ? ' <span class="visuallyhidden">(Current Item)</span>' : '';
 
-                    li.innerHTML = '<button ' + klass + 'data-slide="' + i + '"><span class="visuallyhidden">News</span> ' + (
+                    liImage.innerHTML = '<button ' + klass + 'data-slide="' + i + '"><span class="visuallyhidden">News</span> ' + (
+                    /* li.innerHTML = '<button ' + klass + 'data-slide="' + i + '"><span class="visuallyhidden">News</span> ' + ( */
                         i + 1
                     ) + kurrent + '</button>';
                     slidenav.appendChild(li);
                 });
             }
+
 
             slidenav.addEventListener('click', function (event) {
                 var button = event.target;
@@ -181,7 +199,8 @@ var myCarousel = (function () {
         liveregion.setAttribute('class', 'liveregion visuallyhidden');
         carousel.appendChild(liveregion);
 
-        // After the slide transitioned, remove the in-transition class, if focus should be set, set the tabindex attribute to -1 and focus the slide.
+        // After the slide transitioned, remove the in-transition class, 
+        // if focus should be set, set the tabindex attribute to -1 and focus the slide.
         slides[0].parentNode.addEventListener('transitionend', function (event) {
             var slide = event.target;
             removeClass(slide, 'in-transition');
@@ -262,6 +281,9 @@ var myCarousel = (function () {
         // Reset slide classes
         for (var i = slides.length - 1; i >= 0; i--) {
             slides[i].className = "slide";
+            //tests---
+            console.log('SLIDE==', slide[i]);
+            //----
         }
 
         // Add classes to the previous, next and current slide
@@ -389,7 +411,8 @@ var myCarousel = (function () {
 });
 
 
-onload = () => {
+window.onload = () => {
+    alert('carousel initialize');
     var carousel = new myCarousel();
     carousel.init({id: 'carousel', slidenav: true, animate: true, startAnimated: true});
 }
