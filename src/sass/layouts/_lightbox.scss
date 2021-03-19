@@ -4,27 +4,26 @@ body {margin : 0 !important; } //----- to review : see _photographer-page.scss
     width: 100vw; height: 100vh;
     background-color: lightblue;}
 
-    .carousel.with-slidenav { padding-bottom: 2em;}
-
-    .carousel.active {position: relative;}
-
-    .carousel {
-        border: 5px solid violet;
-        width:1050px;height:900px; 
-        margin:auto; padding-top:10%;
-        position: relative;
-        overflow: hidden;    }
-
+        .carousel.with-slidenav { padding-bottom: 2em;} // leave space at bottom for aria infos
+        .carousel.active {position: relative;}
+        .carousel {
+            border: 5px solid violet;
+            width:1050px;height:900px; 
+            margin:auto; padding-top:10%;
+            position: relative;
+            // overflow: hidden;    
+        }
         .carousel ul {margin: 0;padding: 0;}
 
         // first ul : images display 
         // .slide / = li elements
         // ---------------------------------------
-        .slide {height: 100%;background-size: cover;overflow: hidden;}
+        .slide {height: 100%;background-size: cover;overflow: hidden; position: absolute;}
 
         .active .slide {
             border: 2px solid red;
-            position: absolute;
+            position: relative;
+            //position: absolute;
             top: 0;
             display:block !important;
             transition: left .6s ease-out;
@@ -36,11 +35,6 @@ body {margin : 0 !important; } //----- to review : see _photographer-page.scss
         .active .current.slide {visibility: visible;left: 0; border:2px solid blue;}
         .active .next.slide {left: 100%; border:2px solid orange;}
 
-
-
-
-        // .active {visibility: visible; }
-        // &:not(.active){visibility: hidden;}
 
         // = second ul
         // ---------------------------------------

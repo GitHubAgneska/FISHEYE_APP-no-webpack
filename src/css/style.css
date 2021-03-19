@@ -1070,7 +1070,6 @@ body {
   margin: auto;
   padding-top: 10%;
   position: relative;
-  overflow: hidden;
 }
 
 .carousel ul {
@@ -1082,11 +1081,12 @@ body {
   height: 100%;
   background-size: cover;
   overflow: hidden;
+  position: absolute;
 }
 
 .active .slide {
   border: 2px solid red;
-  position: absolute;
+  position: relative;
   top: 0;
   display: block !important;
   transition: left 0.6s ease-out;
