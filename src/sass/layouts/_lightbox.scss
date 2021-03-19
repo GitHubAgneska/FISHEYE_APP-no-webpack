@@ -2,41 +2,41 @@ body {margin : 0 !important; } //----- to review : see _photographer-page.scss
 
 .lightbox__main-wrapper {
     width: 100vw; height: 100vh;
-    background-color: lightblue;
+    background-color: lightblue;}
+
+    .carousel.with-slidenav { padding-bottom: 2em;}
+
+    .carousel.active {position: relative;}
 
     .carousel {
-        border: 5px violet;
+        border: 5px solid violet;
         width:1050px;height:900px; 
         margin:auto; padding-top:10%;
         position: relative;
-        overflow: hidden;
+        overflow: hidden;    }
+
+        .carousel ul {margin: 0;padding: 0;}
 
         // first ul : images display 
         // .slide / = li elements
         // ---------------------------------------
-        .slide {
-            height: 100%;
-            background-size: cover;
-            overflow: hidden;
-        }
-
-        .active .slide.current {
-            visibility: visible;
-            left: 0;
-        }
-        .active .slide.next {
-            left: 100%;}
-        .active .slide.prev {
-            left: -100%;}
+        .slide {height: 100%;background-size: cover;overflow: hidden;}
 
         .active .slide {
-            position: absolute; top: 0;
-            display: block !important;
+            border: 2px solid red;
+            position: absolute;
+            top: 0;
+            display:block !important;
             transition: left .6s ease-out;
             z-index: 200;
-            visibility: hidden;
+            // visibility: hidden;
         }  
-    }
+
+        .active .prev.slide {left: -100%; border: 2px solid yellow; }
+        .active .current.slide {visibility: visible;left: 0; border:2px solid blue;}
+        .active .next.slide {left: 100%; border:2px solid orange;}
+
+
 
 
         // .active {visibility: visible; }
@@ -71,4 +71,3 @@ body {margin : 0 !important; } //----- to review : see _photographer-page.scss
             // overflow: hidden;
             
         }
-}

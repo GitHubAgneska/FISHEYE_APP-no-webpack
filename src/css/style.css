@@ -1054,8 +1054,17 @@ body {
   height: 100vh;
   background-color: lightblue;
 }
-.lightbox__main-wrapper .carousel {
-  border: 5px violet;
+
+.carousel.with-slidenav {
+  padding-bottom: 2em;
+}
+
+.carousel.active {
+  position: relative;
+}
+
+.carousel {
+  border: 5px solid violet;
   width: 1050px;
   height: 900px;
   margin: auto;
@@ -1063,30 +1072,44 @@ body {
   position: relative;
   overflow: hidden;
 }
-.lightbox__main-wrapper .carousel .slide {
+
+.carousel ul {
+  margin: 0;
+  padding: 0;
+}
+
+.slide {
   height: 100%;
   background-size: cover;
   overflow: hidden;
 }
-.lightbox__main-wrapper .carousel .active .slide.current {
-  visibility: visible;
-  left: 0;
-}
-.lightbox__main-wrapper .carousel .active .slide.next {
-  left: 100%;
-}
-.lightbox__main-wrapper .carousel .active .slide.prev {
-  left: -100%;
-}
-.lightbox__main-wrapper .carousel .active .slide {
+
+.active .slide {
+  border: 2px solid red;
   position: absolute;
   top: 0;
   display: block !important;
   transition: left 0.6s ease-out;
   z-index: 200;
-  visibility: hidden;
 }
-.lightbox__main-wrapper .controls {
+
+.active .prev.slide {
+  left: -100%;
+  border: 2px solid yellow;
+}
+
+.active .current.slide {
+  visibility: visible;
+  left: 0;
+  border: 2px solid blue;
+}
+
+.active .next.slide {
+  left: 100%;
+  border: 2px solid orange;
+}
+
+.controls {
   width: 100%;
   position: absolute;
   z-index: 5;
@@ -1095,18 +1118,19 @@ body {
   flex-flow: row nowrap;
   justify-content: space-between;
 }
-.lightbox__main-wrapper .controls button {
+.controls button {
   color: #901C1C;
   background-color: lightblue;
   font-size: 2em;
 }
-.lightbox__main-wrapper .controls .btn-prev {
+.controls .btn-prev {
   left: -5px;
 }
-.lightbox__main-wrapper .controls .btn-next {
+.controls .btn-next {
   right: 5px;
 }
-.lightbox__main-wrapper .slidenav {
+
+.slidenav {
   width: 100%;
   position: absolute;
   bottom: 0;
