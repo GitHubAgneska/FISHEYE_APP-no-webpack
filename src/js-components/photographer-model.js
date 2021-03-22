@@ -19,7 +19,7 @@ class Photographer {
     constructor(id, name, idPic, url, city, country){
         id = id;
         name = name;
-        idPic = idPic;
+        portrait = portrait;
         city = city;
         country = country;
         tagline = tagline;

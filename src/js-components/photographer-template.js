@@ -28,7 +28,7 @@
 // ----------------------------------------------------
 // PHOTOGRAPHER CUSTOM HTML ELEMENT - HOME
 // ----------------------------------------------------
-class PhotographerTemplateHome extends HTMLElement {
+export class PhotographerTemplateHome extends HTMLElement {
     constructor() {
         super();
 

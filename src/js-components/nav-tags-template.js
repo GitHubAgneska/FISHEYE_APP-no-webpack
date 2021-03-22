@@ -2,7 +2,7 @@
 const navTags = ['portrait', 'paysage']; /* mock data  */
 
 
-class NavTags extends HTMLElement {
+export class NavTags extends HTMLElement {
     constructor() {
         super();
         const shadowRoot = this.attachShadow({mode:'open'});

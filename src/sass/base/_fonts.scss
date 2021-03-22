@@ -4,11 +4,14 @@
 
 @font-face { 
     font-family:'DMSans-regular';
-    src: url('../assets/fonts/DMSans/DMSans-regular.ttf') format('ttf');
+    src: url('../assets/fonts/DMSans-regular.ttf') format('ttf');
+    src: url('../assets/fonts/DMSans-regular.eot') format('ttf');
+    src: url('../assets/fonts/DMSans-regular.woff') format('woff');
+    /* src: url('../assets/fonts/DMSans/DMSans-regular.ttf') format('ttf');
     src: url('../assets/fonts/DMSans/DMSans-regular.eot') format('eot');
-    src: url('../assets/fonts/DMSans/DMSans-regular.woff') format('woff');
+    src: url('../assets/fonts/DMSans/DMSans-regular.woff') format('woff'); */
 }
-@font-face { 
+/* @font-face { 
     font-family:'DMSans-medium';
     src: url('../assets/fonts/DMSans/DMSans-medium.ttf') format('ttf');
     src: url('../assets/fonts/DMSans/DMSans-medium.eot') format('eot');
@@ -31,4 +34,4 @@
     src: url('../assets/fonts/DMSans/DMSans-bold-italic.ttf') format('ttf');
     src: url('../assets/fonts/DMSans/DMSans-bold-italic.eot') format('eot');
     src: url('../assets/fonts/DMSans/DMSans-bold-italic.woff') format('woff');
-}
+} */
