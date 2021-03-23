@@ -1,8 +1,9 @@
 
 
-    //API url
-    var url = 'https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/Front-End+V2/P5+Javascript+%26+Accessibility/FishEyeDataFR.json';
+//API url
+var url = 'https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/Front-End+V2/P5+Javascript+%26+Accessibility/FishEyeDataFR.json';
     
+
 
 
 // mock data =============  ----> use factory/models
@@ -41,6 +42,7 @@ fetch(url)
 
 
 function initializePhotographers(photographers) {
+
     photographers.forEach( photographer => { // generate new photographer object to attach data
 
         newPhotographer = new Photographer();
@@ -58,6 +60,9 @@ function initializePhotographers(photographers) {
 
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
+        // inside navTag class template, 
+        // each navTag has an event listener that calls 'updateHomepageView(tag)' method
+        // defined outside of its scope
 
         // generate new photographer html template and inject data
         newPhotographer.template = new PhotographerTemplateHome();
@@ -67,6 +72,7 @@ function initializePhotographers(photographers) {
 
     })
 }
+
 
 
 
@@ -116,18 +122,11 @@ class PhotographerTemplateHome extends HTMLElement {
                     <h5 class="photographer__price home" id="${newPhotographer.name}-price">${newPhotographer.price}</h5>
     
         `;
-        // create div element to host tagslist nav custom element
-        const photographerTagsListContainer = document.createElement('div');
         // generate new tagslists custom element template
         const photographerTagsList = new NavTags();
         // inject data into it ====> done as attribute setting IN Navtag class
-        // let tagsToInject = newPhotographer.tags;
-
-        // attach tagslist custom template element to its div host  photographer profile
-        photographerTagsListContainer.appendChild(photographerTagsList);
-        // attach navtags div host to photographer profile
-        photographerWrapperHome.appendChild(photographerTagsListContainer);
-
+        // attach navtags component to photographer profile
+        photographerWrapperHome.appendChild(photographerTagsList);
 
         // Attach stylesheet to component
         shadow.appendChild(styleHome);
@@ -280,7 +279,29 @@ customElements.define('nav-tags-component', NavTags);
 // the homepage view is updated, to display a list of photographers 
 // sorted by clicked tag name 
 function updateHomePageView(navTag) {
+    // store tag name for sorting
+    var sortingTerm = navTag;
+
+    // define homepage content
+    const photographersList = document.querySelector('.photographers');
+    // remove eveything that's displayed by default
+    while (photographersList.firstChild) {photographersList.removeChild(photographersList.firstChild)}
+
+    // re-fetch all data & use existing 'initializePhotographers(photographers)'
+    // but with a additional parameter 'tag
+    fetch(url)
+    .then(response => response.json())
+    .then(json => {
+        let photographers = json.photographers;
+        let media = json.media;
+        filterPhotographers(photographers, sortingTerm);
+    });
     
+}
+function filterPhotographers(photographers, sortingTerm){ 
+        var filtered = photographers.filter(x => x.tags.includes(sortingTerm));
+        initializePhotographers(filtered);
+
 }
 
 
