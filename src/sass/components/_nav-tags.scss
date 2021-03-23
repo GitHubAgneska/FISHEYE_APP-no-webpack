@@ -25,6 +25,17 @@
         @include border-radius(10px);
         @include max-1200px {margin: 0 1%;}
         @include min-1200px {margin: 1%;}
+
+        .visuallyHidden {   // ------ to review ( present in _main-rules too )
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
     }
     &.home { justify-content: center; // homepage: taglist =  always centered
         flex-flow: row wrap; // homepage: photographer profile: tagslist will wrap if needed

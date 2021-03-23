@@ -7,7 +7,7 @@
 
 // mock data =============  ----> use factory/models
 class Photographer {
-    constructor(id, name, portrait, portraitUrl, url, city, country, template, tagsTemplate, tags){
+    constructor(id, name, tagline, portrait, portraitUrl, url, city, country, price, template, tagsTemplate, tags){
         id = id;
         name = name;
         portrait = portrait;
@@ -56,32 +56,14 @@ function initializePhotographers(photographers) {
         // newPhotographer.portrait = fetchBlob(newPhotographer.id);
         newPhotographer.portrait = photographer.portrait;
 
-    /*  fetch(url + photographer.portrait)
-        .then(response => { response.blob(); })
-        .then(blob => {
-            var objectURL = URL.createObjectURL(blob);
-            showPortrait(objectURL);
-            // newPhotographer.portraitUrl = objectURL;
-        });
-
-        function showPortrait(objectURL) { newPhotographer.portraitUrl = objectURL;} 
-        showPortrait(); */
-
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
 
         // generate new photographer html template and inject data
         newPhotographer.template = new PhotographerTemplateHome();
 
-        // attach new component to DOM
-        const main = document.querySelector('#homepage-content');
-        // main.appendChild(newPhotographer.template);
-
-        const photographerContainer = document.querySelector('#photographer');
+        const photographerContainer = document.querySelector('#photographersList');
         photographerContainer.appendChild(newPhotographer.template);
-
-        const photographersListContainer = document.querySelector('#photographersList');
-        photographersListContainer.appendChild(photographerContainer);
 
     })
 }
@@ -262,10 +244,26 @@ class NavTags extends HTMLElement {
             var navTagItem = document.createElement('a');
             navTagItem.setAttribute('class', 'nav-tag');
             navTagItem.setAttribute('id', navTags[i]+'-nav-tag');
-            navTagItem.setAttribute('href', "");
+            // navTagItem.setAttribute('href', "");
 
-            var navTagItemContent = document.createTextNode(navTags[i]);
+            // ADD to <a> tag :
+            // event listener click => will call updateView function,
+            // & passing name of tag as parameter (example : 'portrait')
+            navTagItem.addEventListener('click', function() { updateHomePageView(navTags[i])}, false);
+            
+
+            var navTagItemContent = document.createTextNode('#' + navTags[i]);
             navTagItem.appendChild(navTagItemContent);
+
+            // ADD to <a> tag : span element for accessibility ( visually hidden )
+            var spanAccessibility = document.createElement('span');
+            spanAccessibility.setAttribute('class', 'visuallyHidden') // => TO REVIEW : not necessary if 'visuallyHidden' is a mixin 
+            var spanAccessibilityContent = document.createTextNode(navTags[i]); // attach navTag name to span
+            spanAccessibility.appendChild(spanAccessibilityContent);
+
+            //attach span to navtag
+            navTagItem.appendChild(spanAccessibility);
+
             navTagsTemplate.appendChild(navTagItem);
         };
         // Attach stylesheet to component
@@ -276,6 +274,14 @@ class NavTags extends HTMLElement {
 }
 // register custom element in the built-in CustomElementRegistry object
 customElements.define('nav-tags-component', NavTags);
+
+
+// when user clicks on a tag ( main navigation or photographer tagslist)
+// the homepage view is updated, to display a list of photographers 
+// sorted by clicked tag name 
+function updateHomePageView(navTag) {
+    
+}
 
 
 
