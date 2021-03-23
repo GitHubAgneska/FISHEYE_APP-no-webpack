@@ -2,8 +2,7 @@
 
 //API url
 var url = 'https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/Front-End+V2/P5+Javascript+%26+Accessibility/FishEyeDataFR.json';
-    
-
+const tagslistMainNav = [ 'portrait', 'art', 'fashion', 'architecture', 'travel', 'sport', 'animals', 'events'];  
 
 
 // mock data =============  ----> use factory/models
@@ -31,6 +30,9 @@ class Photographer {
 }
 
 
+// -------------------------------------------------------------------------------
+// AT HOMEPAGE OPENING, FETCH RETRIEVES ALL DATA FROM API & triggers creation of photographers list
+// -------------------------------------------------------------------------------
 fetch(url)
     .then(response => response.json())
     .then(json => {
@@ -39,11 +41,32 @@ fetch(url)
         initializePhotographers(photographers);
 });
 
+// -------------------------------------------------------------------------------
+// AT HOMEPAGE OPENING, THE MAIN NAVIGATION WITH TAGS IS GENERATED
+// -------------------------------------------------------------------------------
+function initializeMainNav(tagslistMainNav) {
+    
+    // define parent container (header)
+    // const headerWrapper = document.getElementsByClassName('header-wrapper');
+    const mainNavContainer = document.querySelector('#header');
+    // generate new navtag from navTags custom html element, with whole tags list as param
+    var headerNav = new NavTags(tagslistMainNav);
+    // attach component to parent
+    mainNavContainer.appendChild(headerNav);
+}
+// Call init main nav
+// ( this method only works if page = loaded, otherwise, mainNavContainer = null
+window.onload = () => initializeMainNav(tagslistMainNav);
 
 
+
+
+// -------------------------------------------------------------------------------
+// INIT PHOTOGRAPHERS LIST - HOME - all by default, then eventually sorted by tag
+// -------------------------------------------------------------------------------
 function initializePhotographers(photographers) {
 
-    photographers.forEach( photographer => { // generate new photographer object to attach data
+    photographers.forEach( photographer => { // generate new photographer object to attach data to
 
         newPhotographer = new Photographer();
         newPhotographer.id = photographer.id;
@@ -62,23 +85,22 @@ function initializePhotographers(photographers) {
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
         // inside navTag class template, 
         // each navTag has an event listener that calls 'updateHomepageView(tag)' method
-        // defined outside of its scope
 
         // generate new photographer html template and inject data
         newPhotographer.template = new PhotographerTemplateHome();
 
+        // define where each generated photographer component will be rooted (= section #photographersList)
         const photographerContainer = document.querySelector('#photographersList');
+        // attach each new created component to this section
         photographerContainer.appendChild(newPhotographer.template);
-
     })
 }
 
 
 
-
-// ----------------------------------------------------
-// PHOTOGRAPHER CUSTOM HTML ELEMENT - HOME
-// ----------------------------------------------------
+// ---------------------------------------------------------------------------------------
+// PHOTOGRAPHER CUSTOM HTML ELEMENT - HOME : how each photographer component is generated
+// ---------------------------------------------------------------------------------------
 class PhotographerTemplateHome extends HTMLElement {
     constructor() {
         super();
@@ -93,10 +115,10 @@ class PhotographerTemplateHome extends HTMLElement {
         // create a shadow root
         const shadow = this.attachShadow({mode: 'open'});
 
-        // create component main container div
+        // create photographer component main container div
         const photographerWrapperHome = document.createElement('div');
 
-        // set main container div attributes/properties
+        // set photographer main container div attributes/properties
         photographerWrapperHome.setAttribute('class', 'photographer photographer--home');
         photographerWrapperHome.setAttribute('id', 'photographer-'+ newPhotographer.name); // + name
         photographerWrapperHome.setAttribute('aria-label', newPhotographer.name + ' presentation');
@@ -120,11 +142,12 @@ class PhotographerTemplateHome extends HTMLElement {
                     <h3 class="photographer__location home" id="${newPhotographer.name}-location">${newPhotographer.city}, ${newPhotographer.country}</h3>
                     <h4 class="photographer__tagline home" id="${newPhotographer.name}-tagline">${newPhotographer.tagline}</h4>
                     <h5 class="photographer__price home" id="${newPhotographer.name}-price">${newPhotographer.price}</h5>
-    
         `;
-        // generate new tagslists custom element template
+
+        // generate new tagslists custom element template (using Navtags custom html element)
         const photographerTagsList = new NavTags();
         // inject data into it ====> done as attribute setting IN Navtag class
+
         // attach navtags component to photographer profile
         photographerWrapperHome.appendChild(photographerTagsList);
 
@@ -140,6 +163,7 @@ customElements.define('photographer-component-home', PhotographerTemplateHome);
 
 // ----------------------------------------------------
 // ----------------------------------------------------
+
 
 // ----------------------------------------------------
 // PHOTOGRAPHER CUSTOM HTML ELEMENT - PHOTOGRAPHER PAGE
@@ -217,20 +241,25 @@ class NavTags extends HTMLElement {
     constructor() {
         super();
 
-        // define source of tags
-        // whether it concerns creating the homepage main nav  ------------- * 
-
-        // or tagslist of photographer element
-        // const navTags = this.attributes.newPhotographer[tags].value;
-        const navTags = newPhotographer.tags;
-
         const shadowRoot = this.attachShadow({mode:'open'});
+
         // create nav section
         const navTagsTemplate = document.createElement('nav');
         navTagsTemplate.setAttribute('class', 'header__nav tags-list home');
 
+        // IF navTags component is generated to populate HOME MAIN NAV
+
+        
+        // ELSE IF navTags component is generated to populate PHOTOGRAPHER TAGS LIST
+        // const navTags = this.attributes.newPhotographer[tags].value;
+        // const navTags = newPhotographer.tags;
+        const navTags = tagslistMainNav;
+
         // attach  attributes passed by context ----------------------------- * 
         navTagsTemplate.setAttribute('navTags', navTags);
+
+
+
 
         // link component to main stylesheet  ============> ! does not work in webpack
         const navstyle = document.createElement('link');
@@ -275,6 +304,7 @@ class NavTags extends HTMLElement {
 customElements.define('nav-tags-component', NavTags);
 
 
+
 // when user clicks on a tag ( main navigation or photographer tagslist)
 // the homepage view is updated, to display a list of photographers 
 // sorted by clicked tag name 
@@ -288,21 +318,23 @@ function updateHomePageView(navTag) {
     while (photographersList.firstChild) {photographersList.removeChild(photographersList.firstChild)}
 
     // re-fetch all data & use existing 'initializePhotographers(photographers)'
-    // but with a additional parameter 'tag
+    // but with an additional parameter 'tag' (=searchterm)
     fetch(url)
     .then(response => response.json())
     .then(json => {
         let photographers = json.photographers;
         let media = json.media;
         filterPhotographers(photographers, sortingTerm);
-    });
-    
+    });  
 }
 function filterPhotographers(photographers, sortingTerm){ 
         var filtered = photographers.filter(x => x.tags.includes(sortingTerm));
         initializePhotographers(filtered);
-
 }
+
+
+
+
 
 
 
