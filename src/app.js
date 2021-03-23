@@ -7,10 +7,11 @@
 
 // mock data =============  ----> use factory/models
 class Photographer {
-    constructor(id, name, portrait, url, city, country, template, tagsTemplate, tags){
+    constructor(id, name, portrait, portraitUrl, url, city, country, template, tagsTemplate, tags){
         id = id;
         name = name;
         portrait = portrait;
+        portraitUrl = portraitUrl;
         city = city;
         country = country;
         tagline = tagline;
@@ -25,28 +26,46 @@ class Photographer {
     }
     getPhotographerTags(id) {
         tags.forEach( x => console.log('tag==', x));
-    }
+    } 
 }
+
+
 fetch(url)
     .then(response => response.json())
     .then(json => {
         let photographers = json.photographers;
         let media = json.media;
         initializePhotographers(photographers);
-    })
+});
+
+
 
 function initializePhotographers(photographers) {
-    photographers.forEach(photographer => { // generate new photographer object to attach data
+    photographers.forEach( photographer => { // generate new photographer object to attach data
+
         newPhotographer = new Photographer();
         newPhotographer.id = photographer.id;
         newPhotographer.name = photographer.name;
-        newPhotographer.portrait = photographer.portrait;
-        newPhotographer.city = photographer.name;
-        newPhotographer.country = photographer.name;
+        newPhotographer.city = photographer.city;
+        newPhotographer.country = photographer.country;
         newPhotographer.tagline = photographer.tagline;
         newPhotographer.tags = photographer.tags;
         newPhotographer.price = photographer.price;
         newPhotographer.url = photographer.url;
+
+        // newPhotographer.portrait = fetchBlob(newPhotographer.id);
+        newPhotographer.portrait = photographer.portrait;
+
+    /*  fetch(url + photographer.portrait)
+        .then(response => { response.blob(); })
+        .then(blob => {
+            var objectURL = URL.createObjectURL(blob);
+            showPortrait(objectURL);
+            // newPhotographer.portraitUrl = objectURL;
+        });
+
+        function showPortrait(objectURL) { newPhotographer.portraitUrl = objectURL;} 
+        showPortrait(); */
 
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
@@ -56,10 +75,17 @@ function initializePhotographers(photographers) {
 
         // attach new component to DOM
         const main = document.querySelector('#homepage-content');
-        main.appendChild(newPhotographer.template);
+        // main.appendChild(newPhotographer.template);
+
+        const photographerContainer = document.querySelector('#photographer');
+        photographerContainer.appendChild(newPhotographer.template);
+
+        const photographersListContainer = document.querySelector('#photographersList');
+        photographersListContainer.appendChild(photographerContainer);
 
     })
 }
+
 
 
 // ----------------------------------------------------
@@ -92,8 +118,8 @@ class PhotographerTemplateHome extends HTMLElement {
         const photographerMainBlock = photographerWrapperHome.appendChild(document.createElement('div'));
         photographerMainBlock.setAttribute('class', 'photographer__main-block');
         photographerMainBlock.innerHTML = `
-            <a href="${newPhotographer.portrait}" aria-label="go to ${newPhotographer.name} page">
-                <img class="photographer__pic home" src="${newPhotographer.portrait}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
+            <a href="" aria-label="go to ${newPhotographer.name} page">
+                <img class="photographer__pic home" src="${newPhotographer.portraitUrl}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
                 <h2 class="photographer__name home" id="${newPhotographer.name}">${newPhotographer.name}</h2>
             </a>
             `;
@@ -112,7 +138,7 @@ class PhotographerTemplateHome extends HTMLElement {
         const photographerTagsListContainer = document.createElement('div');
         // generate new tagslists custom element template
         const photographerTagsList = new NavTags();
-        // inject data into it
+        // inject data into it ====> done as attribute setting IN Navtag class
         // let tagsToInject = newPhotographer.tags;
 
         // attach tagslist custom template element to its div host  photographer profile
@@ -163,7 +189,7 @@ class PhotographerTemplatePage extends HTMLElement {
         // create photographer main presentation block (top infos + bottom likes / price)
 
         photographerWrapperPage.innerHTML = `
-            <img class="photographer__pic page" src="${newPhotographer.portrait}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
+            <img class="photographer__pic page" src="${newPhotographer.portraitUrl}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
             <div class="photographer__text-infos">
                 <h1 class="photographer__name page" id="${newPhotographer.name}">${newPhotographer.name}</h1>
                 <h2 class="photographer__location page" id="${newPhotographer.city}">${newPhotographer.city}, ${newPhotographer.country}</h2>
