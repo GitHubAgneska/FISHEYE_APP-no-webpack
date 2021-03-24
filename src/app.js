@@ -3,43 +3,90 @@
 //API url
 var url = 'https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/Front-End+V2/P5+Javascript+%26+Accessibility/FishEyeDataFR.json';
 const tagslistMainNav = [ 'portrait', 'art', 'fashion', 'architecture', 'travel', 'sport', 'animals', 'events'];  
-
+var mediaAssetsPath = './assets/img/';
+var portraitAssetsPath = './assets/img/portraits/S/';
 
 // mock data =============  ----> use factory/models
 class Photographer {
-    constructor(id, name, tagline, portrait, portraitUrl, url, city, country, price, template, tagsTemplate, tags){
+    constructor(id, name, tagline, portrait, portraitSrc, url, city, country, price, template, tagsTemplate, tags, photographerMedia){
         id = id;
         name = name;
-        portrait = portrait;
-        portraitUrl = portraitUrl;
+        portrait = portrait; //  = pic name
+        portraitSrc = portraitAssetsPath + portrait;   // => img src="./assets/img/portraits/S/" + name
         city = city;
         country = country;
         tagline = tagline;
         tags = tags;
-        tagsTemplate = tagsTemplate;
-        // likes = likes; // as coming from json api
-        url = url;
-        price = price;
-        // gallery = gallery;
+        tagsTemplate = tagsTemplate; // navtags list - custom html element
 
-        template = template;
+        url = url; // set up by router
+        price = price; // price/day
+        photographerMedia = photographerMedia ; // all media [] that belongs to photographer (array  of 'mediaItems' objects)
+        
+        template = template; // photographer home - custom html element
     }
-    getPhotographerTags(id) {
+    getPhotographerTags() {
         tags.forEach( x => console.log('tag==', x));
+    }
+    getPhotographerName() {
+        return this.name;
+    }
+}
+
+class MediaItem {
+    constructor(mediaId, photograperId, image, tags, likes, date, price) {
+        mediaId = mediaId;
+        photograperId = photograperId;
+        imageName = image; // ex "Name.jpg"
+        imageSrc = imageSrc; //  => img src="./assets/img/" + imageName
+        let name = Photographer.getPhotographerName();
+        imageSrc = mediaAssetsPath + name;
+        imageTitle = extractImageTitle(imageTitle);
+        tags = tags; // image tags
+        likes = likes;
+        date = date;
+        price = price; // image price
+
+    }
+    extractImageTitle(imageTitle) { 
+        // ex : "Fashion_Yellow_Beach.jpg" =>  "Fashion Yellow Beach"
+        let processedTitle = '';
+        for ( let char of imageTitle ) { 
+            if (char === '_') { char = ' '; }
+            if ( char === '.' ) { return;  }
+            processedTitle+= char;
+        }
+        console.log('processedTitle=', processedTitle);
+        return processedTitle;
     } 
 }
 
 
 // -------------------------------------------------------------------------------
-// AT HOMEPAGE OPENING, FETCH RETRIEVES ALL DATA FROM API & triggers creation of photographers list
+// AT HOMEPAGE OPENING, FETCH RETRIEVES ALL DATA FROM API (PHOTOGRAPHERS DATA ARRAY ONLY) 
+// & triggers creation of photographers list
 // -------------------------------------------------------------------------------
 fetch(url)
     .then(response => response.json())
     .then(json => {
         let photographers = json.photographers;
-        let media = json.media;
         initializePhotographers(photographers);
 });
+
+// fetch only media data
+function fetchMedia() {
+    fetch(url)
+    .then(response => response.json())
+    .then(json => { 
+        let media = json.media;
+        initializePhotographerMedia(media);  
+})
+}
+
+function findImageInAssets() {}
+
+
+
 
 // -------------------------------------------------------------------------------
 // AT HOMEPAGE OPENING, THE MAIN NAVIGATION WITH TAGS IS GENERATED
@@ -57,7 +104,6 @@ function initializeMainNav(tagslistMainNav) {
 // Call init main nav
 // ( this method only works if page = loaded, otherwise, mainNavContainer = null
 window.onload = () => initializeMainNav(tagslistMainNav);
-
 
 
 
@@ -79,7 +125,7 @@ function initializePhotographers(photographers) {
         newPhotographer.url = photographer.url;
 
         // newPhotographer.portrait = fetchBlob(newPhotographer.id);
-        newPhotographer.portrait = photographer.portrait;
+        newPhotographer.portraitSrc = photographer.portraitSrc;
 
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
@@ -93,6 +139,32 @@ function initializePhotographers(photographers) {
         const photographerContainer = document.querySelector('#photographersList');
         // attach each new created component to this section
         photographerContainer.appendChild(newPhotographer.template);
+    })
+}
+
+// -------------------------------------------------------------------------------
+// INIT PHOTOGRAPHER MEDIA - PHOTOGRAPHER PAGE 
+// -------------------------------------------------------------------------------
+// function can only be called for a photographer, with an id param
+function initializePhotographerMedia(media, id) {
+    var photographerId;
+    var photographerMedia = []; // array of objects 'itemMedia' where objects are pushed
+    var mediaItem; // object
+
+    if ( id === undefined ) { id = 0;  } else { photographerId = id; }
+
+    media.forEach(itemOfMedia => {  // loop through media array from api: for each object 'itemMedia'
+        // find matching id btw media & photographer to retrieve array of objects 'itemMedia'
+        if (itemOfMedia.photographerId === photographerId ) {
+            mediaItem = new MediaItem(); // new object media to store incoming data
+            mediaItem.id = itemOfMedia.id;
+            mediaItem.image = itemOfMedia.image; // ex: "name.jpg" => img src="./assets/img/name/"
+            mediaItem.date = itemOfMedia.date;
+            mediaItem.likes = itemOfMedia.likes;
+            mediaItem.tags = itemOfMedia.tags;
+            mediaItem.price = itemOfMedia.price;
+        }
+        photographerMedia.push(mediaItem); // push each media object to array
     })
 }
 
@@ -128,11 +200,13 @@ class PhotographerTemplateHome extends HTMLElement {
         const photographerMainBlock = photographerWrapperHome.appendChild(document.createElement('div'));
         photographerMainBlock.setAttribute('class', 'photographer__main-block');
         photographerMainBlock.innerHTML = `
-            <a href="" aria-label="go to ${newPhotographer.name} page">
-                <img class="photographer__pic home" src="${newPhotographer.portraitUrl}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
+            <a aria-label="go to ${newPhotographer.name} page">
+                <img class="photographer__pic home" src="${newPhotographer.portraitSrc}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
                 <h2 class="photographer__name home" id="${newPhotographer.name}">${newPhotographer.name}</h2>
             </a>
             `;
+        // add event listener on this block, that calls the photographer page with id as param
+        photographerMainBlock.addEventListener('click', function() { initPhotographerPageView(newPhotographer.id)});
         
         // create photographer infos block main presentation block
         const photographerInfosBlock = photographerWrapperHome.appendChild(document.createElement('div'));
@@ -194,7 +268,7 @@ class PhotographerTemplatePage extends HTMLElement {
         // create photographer main presentation block (top infos + bottom likes / price)
 
         photographerWrapperPage.innerHTML = `
-            <img class="photographer__pic page" src="${newPhotographer.portraitUrl}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
+            <img class="photographer__pic page" src="${newPhotographer.portraitSrc}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
             <div class="photographer__text-infos">
                 <h1 class="photographer__name page" id="${newPhotographer.name}">${newPhotographer.name}</h1>
                 <h2 class="photographer__location page" id="${newPhotographer.city}">${newPhotographer.city}, ${newPhotographer.country}</h2>
@@ -259,8 +333,6 @@ class NavTags extends HTMLElement {
         navTagsTemplate.setAttribute('navTags', navTags);
 
 
-
-
         // link component to main stylesheet  ============> ! does not work in webpack
         const navstyle = document.createElement('link');
         navstyle.setAttribute('rel', 'stylesheet');
@@ -304,10 +376,11 @@ class NavTags extends HTMLElement {
 customElements.define('nav-tags-component', NavTags);
 
 
-
+// --------------------------------------------------------------------------------------------------------
 // when user clicks on a tag ( main navigation or photographer tagslist)
 // the homepage view is updated, to display a list of photographers 
 // sorted by clicked tag name 
+// --------------------------------------------------------------------------------------------------------
 function updateHomePageView(navTag) {
     // store tag name for sorting
     var sortingTerm = navTag;
@@ -323,13 +396,29 @@ function updateHomePageView(navTag) {
     .then(response => response.json())
     .then(json => {
         let photographers = json.photographers;
-        let media = json.media;
         filterPhotographers(photographers, sortingTerm);
     });  
 }
+
 function filterPhotographers(photographers, sortingTerm){ 
         var filtered = photographers.filter(x => x.tags.includes(sortingTerm));
         initializePhotographers(filtered);
+}
+
+
+// --------------------------------------------------------------------------------------------------------
+// ON HOMEPAGE : when user clicks on a photographer profile, 
+// that triggers a new view : the photographer own page
+// IDEALLY, photographer data in use on home page is REUSED in this page ( from CACHE ? )
+// + another call to API is made to RETRIEVE MEDIA DATA FOR THIS PHOTOGRAPHER
+// --------------------------------------------------------------------------------------------------------
+function initPhotographerPageView(id) {
+    var photographerId = id;
+
+    fetchMedia();
+
+
+
 }
 
 
