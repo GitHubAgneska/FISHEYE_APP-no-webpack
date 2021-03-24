@@ -8,11 +8,11 @@ var portraitAssetsPath = './assets/img/portraits/S/';
 
 // mock data =============  ----> use factory/models
 class Photographer {
-    constructor(id, name, tagline, portrait, portraitSrc, url, city, country, price, template, tagsTemplate, tags, photographerMedia){
+    constructor(id, name, tagline, portraitName, portraitSrc, url, city, country, price, template, tagsTemplate, tags, photographerMedia){
         id = id;
         name = name;
-        portrait = portrait; //  = pic name
-        portraitSrc = portraitAssetsPath + portrait;   // => img src="./assets/img/portraits/S/" + name
+        portraitName = portraitName; //  = pic name
+        portraitSrc = portraitAssetsPath + portraitName;   // => img src="./assets/img/portraits/S/" + "portraitName"
         city = city;
         country = country;
         tagline = tagline;
@@ -124,8 +124,10 @@ function initializePhotographers(photographers) {
         newPhotographer.price = photographer.price;
         newPhotographer.url = photographer.url;
 
+        newPhotographer.portraitName = photographer.portrait;
         // newPhotographer.portrait = fetchBlob(newPhotographer.id);
-        newPhotographer.portraitSrc = photographer.portraitSrc;
+        newPhotographer.portraitSrc = portraitAssetsPath + newPhotographer.portraitName;
+        
 
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
