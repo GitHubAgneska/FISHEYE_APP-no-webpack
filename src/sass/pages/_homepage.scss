@@ -23,6 +23,8 @@ body {
     @include min-1200px { margin: 0 35px; }
 }
 
+.homepage-content * {margin: auto; }
+
 /* home photographers list presentation */
 .photographers { 
     @include flex(row, wrap); // list will always unfold as a row

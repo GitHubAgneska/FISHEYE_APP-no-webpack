@@ -34,7 +34,7 @@ class Photographer {
 }
 
 class MediaItem {
-    constructor(mediaId, photograperId, image, tags, likes, date, price) {
+    constructor(mediaId, photograperId, image, imageTags, imageLikes, date, price, photoTemplate) {
         mediaId = mediaId;
         photograperId = photograperId;
         imageName = image; // ex "Name.jpg"
@@ -42,10 +42,12 @@ class MediaItem {
         let name = Photographer.getPhotographerName();
         imageSrc = mediaAssetsPath + name;
         imageTitle = extractImageTitle(imageTitle);
-        tags = tags; // image tags
-        likes = likes;
+        imageTags = tags; // image tags
+        imageLikes = likes;
         date = date;
         price = price; // image price
+
+        photoTemplate = photoTemplate;
 
     }
     extractImageTitle(imageTitle) { 
@@ -73,18 +75,22 @@ fetch(url)
         initializePhotographers(photographers);
 });
 
-// fetch only media data
-function fetchMedia() {
+// fetch only media data for one photographer at the time (id)
+function fetchMedia(photographerId) {
     fetch(url)
     .then(response => response.json())
     .then(json => { 
         let media = json.media;
-        initializePhotographerMedia(media);  
-})
+        let photographerImgs = [];
+        for (let medium of media ) { // look only for one photographer id images
+            if ( medium.photographerId === photographerId ) {               
+                photographerImgs.push(medium); // whole media-item object is stored into photographer gallery array
+            }      
+        }
+        console.log('images=======', photographerImgs);
+        return photographerImgs;
+    })
 }
-
-function findImageInAssets() {}
-
 
 
 
@@ -94,7 +100,6 @@ function findImageInAssets() {}
 function initializeMainNav(tagslistMainNav) {
     
     // define parent container (header)
-    // const headerWrapper = document.getElementsByClassName('header-wrapper');
     const mainNavContainer = document.querySelector('#header');
     // generate new navtag from navTags custom html element, with whole tags list as param
     var headerNav = new NavTags(tagslistMainNav);
@@ -297,7 +302,7 @@ class PhotographerTemplatePage extends HTMLElement {
         photoList.setAttribute('id', newPhotographer.name + '-gallery-list');
         galleryWrapper.setAttribute('aria-label', newPhotographer.name + ' photo gallery');
 
-        //  HERE: APPEND PHOTO-LIST LI ELEMENTS  / 
+        //  HERE: APPEND PHOTO-LIST LI ELEMENTS (GALLERY = list of imgs) / 
 
 
         // Attach stylesheet to component
@@ -377,6 +382,54 @@ class NavTags extends HTMLElement {
 // register custom element in the built-in CustomElementRegistry object
 customElements.define('nav-tags-component', NavTags);
 
+// ----------------------------------------------------
+// CUSTOM ELEMENT TEMPLATE FOR IMAGES FROM GALLERY
+// ----------------------------------------------------
+
+// how each photo of photographer gallery will be generated as a html template
+class PhotoItemTemplate extends HTMLElement {
+    constructor() {
+        super();
+
+        // link component to main stylesheet  ============> does not work in webpack
+        const stylePhoto = document.createElement('link');
+        stylePhoto.setAttribute('rel', 'stylesheet');
+        stylePhoto.setAttribute('href', '../css/style.css');
+
+        // create a shadow root
+        const shadow4 = this.attachShadow({mode: 'open'});
+
+        // retrieve existing  'UL' list parent SECTION  element
+        const galleryWrapperSection = document.getElementById('gallery-section');
+        
+        // append content to UL
+        
+        const photoItem = galleryWrapperSection.appendChild(document.createElement('div'));
+        photoItem.innerHTML = `
+
+        <li class="photo-item" id="${image.mediaId}">
+            <a aria-label="enlarge photo" href="">
+                <img src="${image.imageSrc}" alt="${image.imageTitle}">
+            </a>
+            <div class="photo-infos" aria-label="photo infos">
+                <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
+                <h5 class="photo-price" id="photo-price">${image.price}</h5>
+                <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
+                <button>
+                    <img class="like-icon" src="../assets/icons/heart-icon.png" alt="heart icon">
+                </button>
+            </div>
+        </li>
+    `;
+
+    // Attach stylesheet to component
+    shadow4.appendChild(stylePhoto);
+    // Attach the created elements to the shadow dom
+    shadow4.appendChild(photoItem);
+    }
+}
+// register custom element in the built-in CustomElementRegistry object
+customElements.define('photo-component', PhotoItemTemplate);
 
 // --------------------------------------------------------------------------------------------------------
 // when user clicks on a tag ( main navigation or photographer tagslist)
@@ -417,7 +470,34 @@ function filterPhotographers(photographers, sortingTerm){
 function initPhotographerPageView(id) {
     var photographerId = id;
 
-    fetchMedia();
+    // generate new photographer page template
+    var photographerMedia = new PhotographerTemplatePage();
+    // populate object with data
+
+
+    // SET UP IMAGES COLLECTION -----
+    let photographerImgs = [];
+    // fetch data to populate page: methods retrieves an array of images for this photographer
+    photographerImgs = fetchMedia(id);
+    console.log('images=======', photographerImgs);
+    // generate new img item object for each img of array
+    photographerImgs.forEach(pic => {
+        image = new MediaItem();
+        image.mediaId = pic.mediaId;
+        image.photograperId = photographerId; /* pic.photograperId; */
+        image.imageName = pic.image;
+        image.imageSrc = mediaAssetsPath + image.imageName;
+        image.imageTitle = image.extractImageTitle(imageTitle);
+        image.imageLikes = pic.likes;
+        image.date = pic.date;
+        image.price = pic.price;
+
+        image.template = new PhotoItemTemplate();
+    })
+
+
+
+
 
 
 
