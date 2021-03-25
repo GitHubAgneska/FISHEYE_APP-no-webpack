@@ -8,7 +8,7 @@ var portraitAssetsPath = './assets/img/portraits/S/';
 
 // mock data =============  ----> use factory/models
 class Photographer {
-    constructor(id, name, tagline, portraitName, portraitSrc, url, city, country, price, template, tagsTemplate, tags, photographerMedia){
+    constructor(id, name, tagline, portraitName, portraitSrc, url, city, country, price, bottomLikes, template, tagsTemplate, tags, photographerMedia){
         id = id;
         name = name;
         portraitName = portraitName; //  = pic name
@@ -23,34 +23,38 @@ class Photographer {
         price = price; // price/day
         photographerMedia = photographerMedia ; // all media [] that belongs to photographer (array  of 'mediaItems' objects)
         
+        bottomLikes = bottomLikes;
+
         template = template; // photographer home - custom html element
     }
-    getPhotographerTags() {
+    static getPhotographerTags() {
         tags.forEach( x => console.log('tag==', x));
     }
-    getPhotographerName() {
+    static getPhotographerName() {
         return this.name;
     }
 }
 
 class MediaItem {
-    constructor(mediaId, photograperId, image, imageTags, imageLikes, date, price, photoTemplate) {
+    constructor(mediaId, photograperId, photographerName, image, imageName, imageTitle,imageSrc, imageTags, imageLikes, date, price, photoTemplate ) {
         mediaId = mediaId;
         photograperId = photograperId;
         imageName = image; // ex "Name.jpg"
         imageSrc = imageSrc; //  => img src="./assets/img/" + imageName
-        let name = Photographer.getPhotographerName();
-        imageSrc = mediaAssetsPath + name;
-        imageTitle = extractImageTitle(imageTitle);
-        imageTags = tags; // image tags
-        imageLikes = likes;
+        photographerName = photographerName;
+        // photographerName = getPhotographerName(); => use in instantiated object
+        imageSrc = mediaAssetsPath + photographerName;
+        imageTitle = imageTitle;
+        // imageTitle = extractImageTitle(imageTitle); => use in instantiated object
+        imageTags = imageTags; // image tags
+        imageLikes = imageLikes;
         date = date;
         price = price; // image price
 
         photoTemplate = photoTemplate;
 
     }
-    extractImageTitle(imageTitle) { 
+    static extractImageTitle(imageTitle) { 
         // ex : "Fashion_Yellow_Beach.jpg" =>  "Fashion Yellow Beach"
         let processedTitle = '';
         for ( let char of imageTitle ) { 
@@ -72,26 +76,10 @@ fetch(url)
     .then(response => response.json())
     .then(json => {
         let photographers = json.photographers;
+        // let media = json.media;
         initializePhotographers(photographers);
+        // initPhotographerPageView(media);
 });
-
-// fetch only media data for one photographer at the time (id)
-function fetchMedia(photographerId) {
-    fetch(url)
-    .then(response => response.json())
-    .then(json => { 
-        let media = json.media;
-        let photographerImgs = [];
-        for (let medium of media ) { // look only for one photographer id images
-            if ( medium.photographerId === photographerId ) {               
-                photographerImgs.push(medium); // whole media-item object is stored into photographer gallery array
-            }      
-        }
-        console.log('images=======', photographerImgs);
-        return photographerImgs;
-    })
-}
-
 
 
 // -------------------------------------------------------------------------------
@@ -128,12 +116,11 @@ function initializePhotographers(photographers) {
         newPhotographer.tags = photographer.tags;
         newPhotographer.price = photographer.price;
         newPhotographer.url = photographer.url;
+        newPhotographer.bottomLikes = 567789;
 
         newPhotographer.portraitName = photographer.portrait;
-        // newPhotographer.portrait = fetchBlob(newPhotographer.id);
         newPhotographer.portraitSrc = portraitAssetsPath + newPhotographer.portraitName;
         
-
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
         // inside navTag class template, 
@@ -146,32 +133,6 @@ function initializePhotographers(photographers) {
         const photographerContainer = document.querySelector('#photographersList');
         // attach each new created component to this section
         photographerContainer.appendChild(newPhotographer.template);
-    })
-}
-
-// -------------------------------------------------------------------------------
-// INIT PHOTOGRAPHER MEDIA - PHOTOGRAPHER PAGE 
-// -------------------------------------------------------------------------------
-// function can only be called for a photographer, with an id param
-function initializePhotographerMedia(media, id) {
-    var photographerId;
-    var photographerMedia = []; // array of objects 'itemMedia' where objects are pushed
-    var mediaItem; // object
-
-    if ( id === undefined ) { id = 0;  } else { photographerId = id; }
-
-    media.forEach(itemOfMedia => {  // loop through media array from api: for each object 'itemMedia'
-        // find matching id btw media & photographer to retrieve array of objects 'itemMedia'
-        if (itemOfMedia.photographerId === photographerId ) {
-            mediaItem = new MediaItem(); // new object media to store incoming data
-            mediaItem.id = itemOfMedia.id;
-            mediaItem.image = itemOfMedia.image; // ex: "name.jpg" => img src="./assets/img/name/"
-            mediaItem.date = itemOfMedia.date;
-            mediaItem.likes = itemOfMedia.likes;
-            mediaItem.tags = itemOfMedia.tags;
-            mediaItem.price = itemOfMedia.price;
-        }
-        photographerMedia.push(mediaItem); // push each media object to array
     })
 }
 
@@ -247,10 +208,9 @@ customElements.define('photographer-component-home', PhotographerTemplateHome);
 
 
 // ----------------------------------------------------
-// PHOTOGRAPHER CUSTOM HTML ELEMENT - PHOTOGRAPHER PAGE
+// PHOTOGRAPHER INFOS CUSTOM HTML ELEMENT - PHOTOGRAPHER PAGE
 // ----------------------------------------------------
-
-class PhotographerTemplatePage extends HTMLElement {
+class PhotographerTemplatePageInfos extends HTMLElement {
     constructor() {
         super();
 
@@ -264,60 +224,46 @@ class PhotographerTemplatePage extends HTMLElement {
         const shadow2 = this.attachShadow({mode: 'open'});
 
         // create component main container SECTION
-        const photographerWrapperPage = document.createElement('section');
+        const photographerWrapperPageinfos = document.createElement('section');
 
         // set main SECTION container +  attributes/properties
-        photographerWrapperPage.setAttribute('class', 'photographer photographer--page');
-        photographerWrapperPage.setAttribute('id', 'photographer-'+ newPhotographer.name); // + name
-        photographerWrapperPage.setAttribute('aria-label', newPhotographer.name + ' presentation');
+        photographerWrapperPageinfos.setAttribute('class', 'photographer photographer--page');
+        photographerWrapperPageinfos.setAttribute('id', 'photographer-'+ newPhotographer.name); // + name
+        photographerWrapperPageinfos.setAttribute('aria-label', newPhotographer.name + ' presentation');
 
 
         // create photographer main presentation block (top infos + bottom likes / price)
-
-        photographerWrapperPage.innerHTML = `
+        photographerWrapperPageinfos.innerHTML = `
             <img class="photographer__pic page" src="${newPhotographer.portraitSrc}" alt="${newPhotographer.name} presentation picture" id="${newPhotographer.name}-pres-picture">
             <div class="photographer__text-infos">
                 <h1 class="photographer__name page" id="${newPhotographer.name}">${newPhotographer.name}</h1>
                 <h2 class="photographer__location page" id="${newPhotographer.city}">${newPhotographer.city}, ${newPhotographer.country}</h2>
                 <h3 class="photographer__tagline page" id="${newPhotographer.name}-tagline">${newPhotographer.tagline}</h3>
-                <div class="photographer__tags-list tags-list page" id="${photographerTags}"></div>
+                <div class="photographer__tags-list tags-list page" id="${newPhotographer.tags}"></div>
             </div>
 
             <div class="photographer__bottom-infos" id="bottom-infos">
-                <h4 class="photographer__likes" id="${photographerLikes}">${photographerLikes}</h4>
+                <h4 class="photographer__likes" id="${newPhotographer.bottomLikes}">${newPhotographer.bottomLikes}</h4>
                 <h4 class="photographer__price" id="${newPhotographer.price}">${newPhotographer.price}</h4>
             </div>
         `;
 
-        // create component container SECTION for GALLERY
-        const galleryWrapper = document.createElement('section');
-        // set GALLERY SECTION container +  attributes/properties
-        galleryWrapper.setAttribute('class', 'gallery-wrapper');
-        galleryWrapper.setAttribute('id', 'gallery-section-'+ newPhotographer.name);
-        galleryWrapper.setAttribute('aria-label', newPhotographer.name + ' gallery collection');
-
-        // Gallery section consists of a ul element (which imgs content are generated separately
-        const photoList = galleryWrapper.appendChild(document.createElement('ul'));
-        photoList.setAttribute('class', 'gallery');
-        photoList.setAttribute('id', newPhotographer.name + '-gallery-list');
-        galleryWrapper.setAttribute('aria-label', newPhotographer.name + ' photo gallery');
-
-        //  HERE: APPEND PHOTO-LIST LI ELEMENTS (GALLERY = list of imgs) / 
-
-
         // Attach stylesheet to component
         shadow2.appendChild(stylePage);
         // Attach the created elements to the shadow dom
-        shadow2.appendChild(photographerWrapperPage);
+        shadow2.appendChild(photographerWrapperPageInfos);
+        }
     }
-}
+    // register custom element in the built-in CustomElementRegistry object
+    customElements.define('photographer-component-page-infos', PhotographerTemplatePageInfos);  
 
-// register custom element in the built-in CustomElementRegistry object
-customElements.define('photographer-component-page', PhotographerTemplatePage);
+
+
+
 
 // ----------------------------------------------------
+// CUSTOM ELEMENT TEMPLATE FOR NAVTAGS
 // ----------------------------------------------------
-
 class NavTags extends HTMLElement {
     constructor() {
         super();
@@ -382,54 +328,6 @@ class NavTags extends HTMLElement {
 // register custom element in the built-in CustomElementRegistry object
 customElements.define('nav-tags-component', NavTags);
 
-// ----------------------------------------------------
-// CUSTOM ELEMENT TEMPLATE FOR IMAGES FROM GALLERY
-// ----------------------------------------------------
-
-// how each photo of photographer gallery will be generated as a html template
-class PhotoItemTemplate extends HTMLElement {
-    constructor() {
-        super();
-
-        // link component to main stylesheet  ============> does not work in webpack
-        const stylePhoto = document.createElement('link');
-        stylePhoto.setAttribute('rel', 'stylesheet');
-        stylePhoto.setAttribute('href', '../css/style.css');
-
-        // create a shadow root
-        const shadow4 = this.attachShadow({mode: 'open'});
-
-        // retrieve existing  'UL' list parent SECTION  element
-        const galleryWrapperSection = document.getElementById('gallery-section');
-        
-        // append content to UL
-        
-        const photoItem = galleryWrapperSection.appendChild(document.createElement('div'));
-        photoItem.innerHTML = `
-
-        <li class="photo-item" id="${image.mediaId}">
-            <a aria-label="enlarge photo" href="">
-                <img src="${image.imageSrc}" alt="${image.imageTitle}">
-            </a>
-            <div class="photo-infos" aria-label="photo infos">
-                <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
-                <h5 class="photo-price" id="photo-price">${image.price}</h5>
-                <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
-                <button>
-                    <img class="like-icon" src="../assets/icons/heart-icon.png" alt="heart icon">
-                </button>
-            </div>
-        </li>
-    `;
-
-    // Attach stylesheet to component
-    shadow4.appendChild(stylePhoto);
-    // Attach the created elements to the shadow dom
-    shadow4.appendChild(photoItem);
-    }
-}
-// register custom element in the built-in CustomElementRegistry object
-customElements.define('photo-component', PhotoItemTemplate);
 
 // --------------------------------------------------------------------------------------------------------
 // when user clicks on a tag ( main navigation or photographer tagslist)
@@ -467,46 +365,195 @@ function filterPhotographers(photographers, sortingTerm){
 // IDEALLY, photographer data in use on home page is REUSED in this page ( from CACHE ? )
 // + another call to API is made to RETRIEVE MEDIA DATA FOR THIS PHOTOGRAPHER
 // --------------------------------------------------------------------------------------------------------
-function initPhotographerPageView(id) {
-    var photographerId = id;
-
-    // generate new photographer page template
-    var photographerMedia = new PhotographerTemplatePage();
-    // populate object with data
 
 
-    // SET UP IMAGES COLLECTION -----
-    let photographerImgs = [];
-    // fetch data to populate page: methods retrieves an array of images for this photographer
-    photographerImgs = fetchMedia(id);
-    console.log('images=======', photographerImgs);
-    // generate new img item object for each img of array
-    photographerImgs.forEach(pic => {
-        image = new MediaItem();
-        image.mediaId = pic.mediaId;
-        image.photograperId = photographerId; /* pic.photograperId; */
-        image.imageName = pic.image;
-        image.imageSrc = mediaAssetsPath + image.imageName;
-        image.imageTitle = image.extractImageTitle(imageTitle);
-        image.imageLikes = pic.likes;
-        image.date = pic.date;
-        image.price = pic.price;
+function initPhotographerPageView(photographerId) {
 
-        image.template = new PhotoItemTemplate();
-    })
+    console.log('id==',photographerId );
+    let photographerInfos;
+
+    // rerieve info data for this photographer
+    fetch(url)
+        .then(response => response.json())
+        .then(json => {
+            let photographers = json.photographers;
+            findPhotographerInfo(photographers, photographerId);
+        })
+
+    function findPhotographerInfo(photographers, photographerId) {
+        photographers.forEach(photographer => {
+            if (photographer.id === photographerId ) { 
+                photographerInfos = photographer; 
+                newPhotographer = new Photographer();
+                newPhotographer.id = photographer.id;
+                newPhotographer.name = photographer.name;
+                newPhotographer.city = photographer.city;
+                newPhotographer.country = photographer.country;
+                newPhotographer.tagline = photographer.tagline;
+                newPhotographer.tags = photographer.tags;
+                newPhotographer.price = photographer.price;
+                newPhotographer.url = photographer.url;
+                newPhotographer.bottomLikes = 567789;
+                newPhotographer.portraitName = photographer.portrait;
+                newPhotographer.portraitSrc = portraitAssetsPath + newPhotographer.portraitName;
+                
+                // generate new navtags html template and inject data
+                newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
+                // inside navTag class template, 
+                // each navTag has an event listener that calls 'updateHomepageView(tag)' method
+        
+                // generate new photographer html template and inject data
+                newPhotographer.template = new PhotographerTemplatePageInfos();
+        
+                // define where each generated photographer component will be rooted (= section #photographersList)
+                const photographerInfosContainer = document.querySelector('#photographer-content');
+                // attach each new created component to this section
+                photographerInfosContainer.appendChild(newPhotographer.template);
+            }
+        })
+
+    }
 
 
 
 
 
+    fetchMedia(photographerId);
+
+    // fetch only media data for one photographer at the time (id)
+    function fetchMedia(photographerId) {
+        fetch(url)
+        .then(response => response.json())
+        .then(json => { 
+            let media = json.media;
+            sendMediaDataToPhotographerGallery(media, photographerId);
+        })
+    }
 
 
+    function sendMediaDataToPhotographerGallery(media, photographerId){
+
+        var photographerMedia = []; // array of objects 'itemMedia' where objects are pushed
+
+        media.forEach(itemOfMedia => {  // loop through media array from api: for each object 'itemMedia'
+        // find matching id btw media & photographer to retrieve array of objects 'itemMedia'
+            if (itemOfMedia.photographerId === photographerId ) {
+                photographerMedia.push(itemOfMedia); // push each media object to array
+            }
+        })
+
+        // generate new img item object for each img of array
+        photographerMedia.forEach(pic => {
+            image = new MediaItem();
+            image.mediaId = pic.mediaId;
+            image.photograperId = photographerId; /* pic.photograperId; */
+            image.imageName = pic.image;
+            image.photographerName = newPhotographer.name;
+            image.imageSrc = mediaAssetsPath + image.imageName;
+
+            image.imageTitle = image.imageName;
+            // image.imageTitle = image.extractImageTitle(image.imageName);
+            image.imageLikes = pic.likes;
+            image.date = pic.date;
+            image.price = pic.price;
+            image.imageTags = pic.tags;
+
+            image.template = new PhotoItemTemplate();
+        })
+        // define host for gallery component
+        const galleryWrapperSection = document.getElementById('gallery-section');
+        // render gallery 
+        galleryWrapperSection.appendChild(photographerMedia)
+    }
 }
 
 
 
+// ----------------------------------------------------
+// CUSTOM ELEMENT TEMPLATE FOR IMAGES FROM GALLERY
+// ----------------------------------------------------
+
+// how each photo of photographer gallery will be generated as a html template
+class PhotoItemTemplate extends HTMLElement {
+    constructor() {
+        super();
+
+        // link component to main stylesheet  ============> does not work in webpack
+        const stylePhoto = document.createElement('link');
+        stylePhoto.setAttribute('rel', 'stylesheet');
+        stylePhoto.setAttribute('href', '../css/style.css');
+
+        // create a shadow root
+        const shadow4 = this.attachShadow({mode: 'open'});
+
+        // retrieve existing  'UL' list parent SECTION  element
+        const galleryWrapperSection = document.createElement('ul');
+        galleryWrapperSection.setAttribute('id', 'gallery-section');
+        
+        // const galleryWrapperSection = document.getElementById('gallery-section');
+        
+        // append content to UL
+        const photoItem = document.createElement('div');
+        photoItem.innerHTML = `
+
+        <li class="photo-item" id="${image.mediaId}">
+            <a aria-label="enlarge photo" href="">
+                <img src="${image.imageSrc}" alt="${image.imageTitle}">
+            </a>
+            <div class="photo-infos" aria-label="photo infos">
+                <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
+                <h5 class="photo-price" id="photo-price">${image.price}</h5>
+                <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
+                <button>
+                    <img class="like-icon" src="../assets/icons/heart-icon.png" alt="heart icon">
+                </button>
+            </div>
+        </li>
+    `;
+    
+    // Attach stylesheet to component
+    shadow4.appendChild(stylePhoto);
+    // Attach the created elements to the shadow dom
+    shadow4.appendChild(photoItem);
+    // attach each photo item to gallery
+    galleryWrapperSection.appendChild(photoItem);
+    }
+}
+// register custom element in the built-in CustomElementRegistry object
+customElements.define('photo-component', PhotoItemTemplate);
+
+// ----------------------------------------------------
+// PHOTOGRAPHER GALLERY CUSTOM HTML ELEMENT - PHOTOGRAPHER PAGE
+// ----------------------------------------------------
+class PhotographerTemplatePageGallery extends HTMLElement {
+
+    constructor() {
+        super();
+        // create component container SECTION for GALLERY
+        const galleryWrapper = document.createElement('section');
+        // set GALLERY SECTION container +  attributes/properties
+        galleryWrapper.setAttribute('class', 'gallery-wrapper');
+        galleryWrapper.setAttribute('id', 'gallery-section-'+ newPhotographer.name);
+        galleryWrapper.setAttribute('aria-label', newPhotographer.name + ' gallery collection');
+
+        // Gallery section consists of a ul element (which imgs content are generated separately
+        const photoList = galleryWrapper.appendChild(document.createElement('ul'));
+        photoList.setAttribute('class', 'gallery');
+        photoList.setAttribute('id', newPhotographer.name + '-gallery-list');
+        galleryWrapper.setAttribute('aria-label', newPhotographer.name + ' photo gallery');
+
+        //  HERE: APPEND PHOTO-LIST LI ELEMENTS (GALLERY = list of imgs) / 
 
 
+        // Attach stylesheet to component
+        shadow2.appendChild(stylePage);
+        // Attach the created elements to the shadow dom
+        shadow2.appendChild(photographerWrapperPage);
+    }
+}
+
+// register custom element in the built-in CustomElementRegistry object
+customElements.define('photographer-component-page-gallery', PhotographerTemplatePageGallery);
 
 
 
