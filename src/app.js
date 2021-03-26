@@ -6,9 +6,10 @@ const tagslistMainNav = [ 'portrait', 'art', 'fashion', 'architecture', 'travel'
 var mediaAssetsPath = './assets/img/';
 var portraitAssetsPath = './assets/img/portraits/S/';
 
-// mock data =============  ----> use factory/models
+// OBJECTS models =============  ----> + to be used with factory
 class Photographer {
     constructor(id, name, tagline, portraitName, portraitSrc, url, city, country, price, bottomLikes, template, tagsTemplate, tags, photographerMedia){
+        
         id = id;
         name = name;
         portraitName = portraitName; //  = pic name
@@ -19,33 +20,33 @@ class Photographer {
         tags = tags;
         tagsTemplate = tagsTemplate; // navtags list - custom html element
 
-        url = url; // set up by router
-        price = price; // price/day
-        photographerMedia = photographerMedia ; // all media [] that belongs to photographer (array  of 'mediaItems' objects)
-        
+        url = '';  // set up by router
+        price = price + '/day'; // price/day
+        photographerMedia = photographerMedia ; // all media [] that belongs to photographer (array  of 'mediaItems' objects)    
+        localPathToMediaFolder = mediaAssetsPath + name; // ./assets/img/{name}/
         bottomLikes = bottomLikes;
 
         template = template; // photographer home - custom html element
     }
-    static getPhotographerTags() {
-        tags.forEach( x => console.log('tag==', x));
-    }
-    static getPhotographerName() {
-        return this.name;
-    }
+    getPhotographerName = function() { return this.name; }
 }
 
+
+
 class MediaItem {
-    constructor(mediaId, photograperId, photographerName, image, imageName, imageTitle,imageSrc, imageTags, imageLikes, date, price, photoTemplate ) {
+    constructor(mediaId, photograperId, photographerName, image, imageName, imageTitle, imageSrc, imageTags, imageLikes, date, price, photoTemplate) {
+        
         mediaId = mediaId;
         photograperId = photograperId;
         imageName = image; // ex "Name.jpg"
-        imageSrc = imageSrc; //  => img src="./assets/img/" + imageName
-        photographerName = photographerName;
-        // photographerName = getPhotographerName(); => use in instantiated object
-        imageSrc = mediaAssetsPath + photographerName;
+        photographerName = photographerName; // required for img path
+        
+        imageSrc = mediaAssetsPath + photographerName + '/S/' + imageName; // ex => "./assets/img/Mimi Keel/S/Animals_Rainbow.jpg'
+
+
         imageTitle = imageTitle;
         // imageTitle = extractImageTitle(imageTitle); => use in instantiated object
+
         imageTags = imageTags; // image tags
         imageLikes = imageLikes;
         date = date;
@@ -118,6 +119,8 @@ function initializePhotographers(photographers) {
         newPhotographer.portraitName = photographer.portrait;
         newPhotographer.portraitSrc = portraitAssetsPath + newPhotographer.portraitName;
         
+        newPhotographer.localPathToMediaFolder = mediaAssetsPath + photographer.name;
+
         // generate new navtags html template and inject data
         newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
         // inside navTag class template, 
@@ -170,8 +173,9 @@ class PhotographerTemplateHome extends HTMLElement {
                 <h2 class="photographer__name home" id="${newPhotographer.name}">${newPhotographer.name}</h2>
             </a>
             `;
+
         // add event listener on this block, that calls the photographer page with id as param
-        photographerMainBlock.addEventListener('click', function() { initPhotographerPageView(newPhotographer.id)});
+        photographerMainBlock.addEventListener('click', function(e) { initPhotographerPageView(e, newPhotographer.id); }, false); // ------ TO REVIEW : always same LAST ID of api IS PASSED
         
         // create photographer infos block main presentation block
         const photographerInfosBlock = photographerWrapperHome.appendChild(document.createElement('div'));
@@ -315,10 +319,12 @@ function filterPhotographers(photographers, sortingTerm){
 // --------------------------------------------------------------------------------------------------------
 
 
-function initPhotographerPageView(photographerId) {
+function initPhotographerPageView(e, photographerId) {
+    // let target = e.target;
+    e.stopPropagation();
+    e.preventDefault();
 
     console.log('id==',photographerId );
-    let photographerInfos;
 
     // BLOC 1 : PHOTOGRAPHER INFOS
     // rerieve info data for this photographer
@@ -346,17 +352,20 @@ function initPhotographerPageView(photographerId) {
                 newPhotographer.bottomLikes = 567789;
                 newPhotographer.portraitName = photographer.portrait;
                 newPhotographer.portraitSrc = portraitAssetsPath + newPhotographer.portraitName;
+                newPhotographer.localPathToMediaFolder = mediaAssetsPath + photographer.name;
                 
+                // generate new photographer html template and inject data
+                newPhotographer.template = new PhotographerTemplatePage(photographer.id);
+
                 // generate new navtags html template and inject data
                 newPhotographer.tagsTemplate = new NavTags(newPhotographer.tags);
         
-                // generate new photographer html template and inject data
-                newPhotographer.template = new PhotographerTemplatePage(photographer.id);
-        
                 // define where each generated photographer component will be rooted (= section #photographersList)
                 const photographerInfosContainer = document.querySelector('#photographer-content');
-                // attach each new created component to this section
+                
+                // attach each new created components to this section
                 photographerInfosContainer.appendChild(newPhotographer.template);
+                photographerInfosContainer.appendChild(newPhotographer.tagsTemplate);
             }
         })
     }
@@ -406,6 +415,9 @@ class PhotographerTemplatePage extends HTMLElement {
             </div>
         `;
 
+        const photographerTagsList2 = new NavTags(newPhotographer.tags);
+        photographerWrapperPage.appendChild(photographerTagsList2);
+
         // GALLERY BLOCK
         // create component container SECTION for GALLERY
         const galleryWrapper = document.createElement('section');
@@ -423,7 +435,7 @@ class PhotographerTemplatePage extends HTMLElement {
 
         //  HERE: APPEND PHOTO-LIST LI ELEMENTS (GALLERY = list of imgs) / 
         // call to initiate photographer media + templates
-        fetchMedia(newPhotographer.id);
+        fetchMedia(newPhotographer.id, newPhotographer.name);
     
         // Attach stylesheet to component
         shadow2.appendChild(stylePage);
@@ -447,12 +459,12 @@ class PhotographerTemplatePage extends HTMLElement {
     // fetchMedia(photographerId);
 
     // fetch only media data for one photographer at the time (id)
-    function fetchMedia(photographerId) {
+    function fetchMedia(photographerId, photographerName) {
         fetch(url)
         .then(response => response.json())
         .then(json => { 
             let media = json.media;
-            sendMediaDataToPhotographerGallery(media, photographerId);
+            sendMediaDataToPhotographerGallery(media, photographerId, photographerName );
         })
     }
 
@@ -460,7 +472,7 @@ class PhotographerTemplatePage extends HTMLElement {
     // ONCE PHOTOGRAPHER PAGE WRAPPER + ITS MAIN BLOCKS INFOS & GALLERY EXIST, 
     // POPULATE GALLERY : 
     // 1 - RETRIEVE ALL MEDIA FOR THE PHOTOGRAPHER WITH ID
-    function sendMediaDataToPhotographerGallery(media, photographerId){
+    function sendMediaDataToPhotographerGallery(media, photographerId, photographerName){
         var photographerMedia = []; // array of objects 'itemMedia' where objects are pushed
 
         media.forEach(itemOfMedia => {  // loop through media array from api: for each object 'itemMedia'
@@ -475,8 +487,10 @@ class PhotographerTemplatePage extends HTMLElement {
             image.mediaId = pic.mediaId;
             image.photograperId = photographerId; /* pic.photograperId; */
             image.imageName = pic.image;
-            image.photographerName = newPhotographer.name;
             image.imageSrc = mediaAssetsPath + image.imageName;
+            
+            image.photographerName = photographerName; //necessary for url
+            image.localPath = localPathToMediaFolder + '/S/' + image.imageName;
 
             image.imageTitle = image.imageName;
             // image.imageTitle = image.extractImageTitle(image.imageName);
@@ -501,14 +515,10 @@ class PhotographerTemplatePage extends HTMLElement {
             // link component to main stylesheet  ============> does not work in webpack
             const stylePhoto = document.createElement('link');
             stylePhoto.setAttribute('rel', 'stylesheet');
-            stylePhoto.setAttribute('href', '../css/style.css');
+            stylePhoto.setAttribute('href', './css/style.css');
 
             // create a shadow root
             const shadow4 = this.attachShadow({mode: 'open'});
-
-            // retrieve existing  'UL' list parent SECTION  element
-           // const galleryWrapperSection = document.createElement('ul');
-           //  galleryWrapperSection.setAttribute('id', 'gallery-section');
             
             const galleryWrapperSection = document.querySelector('.gallery-wrapper');
             
@@ -516,20 +526,20 @@ class PhotographerTemplatePage extends HTMLElement {
             const photoItem = document.createElement('div');
             photoItem.innerHTML = `
 
-            <li class="photo-item" id="${image.mediaId}">
-                <a aria-label="enlarge photo" href="">
-                    <img src="${image.imageSrc}" alt="${image.imageTitle}">
-                </a>
-                <div class="photo-infos" aria-label="photo infos">
-                    <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
-                    <h5 class="photo-price" id="photo-price">${image.price}</h5>
-                    <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
-                    <button>
-                        <img class="like-icon" src="../assets/icons/heart-icon.png" alt="heart icon">
-                    </button>
-                </div>
-            </li>
-        `;
+                <li class="photo-item" id="${image.mediaId}">
+                    <a aria-label="enlarge photo" href="">
+                        <img src="${image.imageSrc}" alt="${image.imageTitle}">
+                    </a>
+                    <div class="photo-infos" aria-label="photo infos">
+                        <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
+                        <h5 class="photo-price" id="photo-price">${image.price}</h5>
+                        <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
+                        <button>
+                            <img class="like-icon" src="./assets/icons/heart-icon.png" alt="heart icon">
+                        </button>
+                    </div>
+                </li>
+            `;
         
         // Attach stylesheet to component
         shadow4.appendChild(stylePhoto);
