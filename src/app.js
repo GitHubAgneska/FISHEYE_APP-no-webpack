@@ -5,10 +5,11 @@ var url = 'https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/Fron
 const tagslistMainNav = [ 'portrait', 'art', 'fashion', 'architecture', 'travel', 'sport', 'animals', 'events'];  
 var mediaAssetsPath = './assets/img/';
 var portraitAssetsPath = './assets/img/portraits/S/';
+var localPathToMediaFolder;
 
 // OBJECTS models =============  ----> + to be used with factory
 class Photographer {
-    constructor(id, name, tagline, portraitName, portraitSrc, url, city, country, price, bottomLikes, template, tagsTemplate, tags, photographerMedia){
+    constructor(id, name, tagline, portraitName, portraitSrc, url, city, country, price, bottomLikes, template, tagsTemplate, tags, photographerMedia, localPathToMediaFolder){
         
         id = id;
         name = name;
@@ -365,7 +366,7 @@ function initPhotographerPageView(e, photographerId) {
                 
                 // attach each new created components to this section
                 photographerInfosContainer.appendChild(newPhotographer.template);
-                photographerInfosContainer.appendChild(newPhotographer.tagsTemplate);
+                // photographerInfosContainer.appendChild(newPhotographer.tagsTemplate);
             }
         })
     }
@@ -484,7 +485,7 @@ class PhotographerTemplatePage extends HTMLElement {
         // 2 - generate new media item object for each item of media array
         photographerMedia.forEach(pic => {
             image = new MediaItem();
-            image.mediaId = pic.mediaId;
+            image.mediaId = pic.id;
             image.photograperId = photographerId; /* pic.photograperId; */
             image.imageName = pic.image;
             image.imageSrc = mediaAssetsPath + image.imageName;
@@ -514,31 +515,35 @@ class PhotographerTemplatePage extends HTMLElement {
 
             // link component to main stylesheet  ============> does not work in webpack
             const stylePhoto = document.createElement('link');
-            stylePhoto.setAttribute('rel', 'stylesheet');
+            // stylePhoto.setAttribute('rel', 'stylesheet');
             stylePhoto.setAttribute('href', './css/style.css');
+            stylePhoto.setAttribute('type', 'text/css');
 
             // create a shadow root
             const shadow4 = this.attachShadow({mode: 'open'});
             
-            const galleryWrapperSection = document.querySelector('.gallery-wrapper');
+            const galleryWrapperSection = document.querySelector('#photos-list');
             
             // append content to UL
-            const photoItem = document.createElement('div');
+            const photoItem = document.createElement('li');
+            photoItem.setAttribute('class', 'photo-item');
+
             photoItem.innerHTML = `
 
-                <li class="photo-item" id="${image.mediaId}">
+                <div class="pic-wrapper">
                     <a aria-label="enlarge photo" href="">
-                        <img src="${image.imageSrc}" alt="${image.imageTitle}">
+                        <img src="./assets/img/${newPhotographer.name}/S/${image.imageName}" alt="${image.imageTitle}">
                     </a>
-                    <div class="photo-infos" aria-label="photo infos">
-                        <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
-                        <h5 class="photo-price" id="photo-price">${image.price}</h5>
-                        <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
-                        <button>
-                            <img class="like-icon" src="./assets/icons/heart-icon.png" alt="heart icon">
-                        </button>
-                    </div>
-                </li>
+                </div>
+                <div class="photo-infos" aria-label="photo infos">
+                    <h5 class="photo-title" id="photo-title">${image.imageTitle}</h5>
+                    <h5 class="photo-price" id="photo-price">${image.price}</h5>
+                    <h5 class="photo-likes" id="photo-likes">${image.imageLikes}</h5>
+                    <button>
+                        <img class="like-icon" src="./assets/icons/heart-icon.png" alt="heart icon">
+                    </button>
+                </div>
+            
             `;
         
         // Attach stylesheet to component
